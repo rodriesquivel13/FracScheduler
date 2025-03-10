@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yearly Calendar - {{ year }}</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Yearly Calendar - {{ year }}</h1>
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Fraction Index</th>
+        </tr>
+        {% for date, fraction_index in calendar_data.items() %}
+        <tr>
+            <td>{{ date.strftime('%Y-%m-%d') }}</td>
+            <td>{{ fraction_index[0] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

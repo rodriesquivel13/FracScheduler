@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yearly Calendar - {{ year }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Yearly Calendar - {{ year }}</h1>
+    <div class="navigation">
+        <a href="/{{ year-1 }}">Previous Year</a>
+        <a href="/{{ year+1 }}">Next Year</a>
+    </div>
+
+    <div class="calendar">
+        {% for month_name, month_days in year_calendar.items() %}
+        <div class="month">
+            <h2>{{ month_name }}</h2>
+            <table>
+                <tr>
+                    <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
+                </tr>
+                {% for week in month_days %}
+                <tr>
+                    {% for day in week %}
+                        <td>{{ day if day != 0 else '' }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
