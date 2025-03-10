@@ -220,10 +220,10 @@ if __name__ == "__main__":
         else:
             pass"""
 
-    for k in range(2027,2035):
+    """for k in range(2027,2035):
         print(f'Año {k}')
         for i in range(len(calendar1.keys())):
             calendar1 = fractional_index_maker(k,0)
             calendar2 = fractional_day_weeker(k,0)
-            print(list(calendar1.keys())[i],list(calendar1.values())[i],list(calendar2.values())[i])
+            print(list(calendar1.keys())[i],list(calendar1.values())[i],list(calendar2.values())[i])"""
 
