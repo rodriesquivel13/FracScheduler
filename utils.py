@@ -214,8 +214,8 @@ if __name__ == "__main__":
     calendar1 = fractional_index_maker(year,0)
     calendar2 = fractional_day_weeker(year,0)
 
-    """for i in range(len(calendar1.keys())):
+    for i in range(len(calendar1.keys())):
         if list(calendar1.values())[i] == [6]:
             print(list(calendar1.keys())[i],list(calendar1.values())[i],list(calendar2.values())[i])
         else:
-            pass"""
+            pass
