@@ -197,6 +197,8 @@ def fractional_index_maker(current_year, weekday_calendar_starts):
 
     return dict(zip(fractional_calendar_week_indexed.keys(),fraction_index_list))
 
+
+
 # ======== Test Block ========
 
 if __name__ == "__main__":
@@ -212,7 +214,6 @@ if __name__ == "__main__":
 
     year = 2027
   
-
     for k in range(year,year + 2):
         print(k)
         calendar1 = fractional_index_maker(k,0)
