@@ -27,18 +27,12 @@ def index():
     # Obtener el diccionario de fracciones
     fractional_indices = fractional_index_maker(year, start_day)
     
-    # Ajustar la primera semana de enero para incluir los últimos días de diciembre
-    if months[0][0][0] == 0:
-        last_days_december = calendar.Calendar(firstweekday=start_day).monthdayscalendar(year - 1, 12)[-1]
-        last_days_december = [day for day in last_days_december if day != 0]
-        last_days_december.reverse()  # Reverse the order to start with the correct day
-        for i in range(len(months[0][0])):
-            if months[0][0][i] == 0:
-                months[0][0][i] = last_days_december.pop()
+    # Obtener diciembre del año anterior
+    previous_december = cal.monthdayscalendar(year - 1, 12)
 
     day_names = [calendar.day_name[(i + start_day) % 7] for i in range(7)]
     months_with_index = list(enumerate(months))
-    return render_template('calendar.html', year=year, months_with_index=months_with_index, start_day=start_day, day_names=day_names, calendar=calendar, fractional_indices=fractional_indices, fraction_colors=fraction_colors, datetime=datetime)
+    return render_template('calendar.html', year=year, months_with_index=months_with_index, start_day=start_day, day_names=day_names, calendar=calendar, fractional_indices=fractional_indices, fraction_colors=fraction_colors, datetime=datetime, previous_december=previous_december)
 
 if __name__ == '__main__':
     app.run(debug=True)
