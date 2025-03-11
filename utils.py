@@ -210,12 +210,13 @@ if __name__ == "__main__":
     for i in range (2027,2047):
         print(semana_santa_weeker(i,0), semana_diabla_weeker(i,0))"""
 
-    year = 2029
-    calendar1 = fractional_index_maker(year,0)
-    calendar2 = fractional_day_weeker(year,0)
+    year = 2027
+  
 
-    for i in range(len(calendar1.keys())):
-        if list(calendar1.values())[i] == [6]:
-            print(list(calendar1.keys())[i],list(calendar1.values())[i],list(calendar2.values())[i])
-        else:
-            pass
+    for k in range(year,year + 2):
+        print(k)
+        calendar1 = fractional_index_maker(k,0)
+        calendar2 = fractional_day_weeker(k,0)
+        for i in range(len(calendar1.keys())):
+           print(list(calendar1.keys())[i],list(calendar1.values())[i],list(calendar2.values())[i])
+            
