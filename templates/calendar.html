@@ -40,7 +40,8 @@
                                 {% for day in week %}
                                     {% set date = datetime(year, month_index + 1, day) if day != 0 else None %}
                                     {% set fraction = fractional_indices.get(date) if date else None %}
-                                    <td class="{{ 'empty' if day == 0 else '' }}" style="background-color: {% if fraction %}{{ fraction_colors[fraction[0]] }}{% else %}#ffffff{% endif %};">
+                                    {% set text_color = '#FFFFFF' if fraction and fraction[0] in [0, 2, 4, 6] else '#000000' %}
+                                    <td class="{{ 'empty' if day == 0 else '' }}" style="background-color: {% if fraction %}{{ fraction_colors[fraction[0]] }}{% else %}#ffffff{% endif %}; color: {{ text_color }};">
                                         {{ day if day != 0 else '' }}
                                     </td>
                                 {% endfor %}
