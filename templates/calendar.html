@@ -6,19 +6,19 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Fractional Calendar - {{ year }}</h1>
+    <h1>Calendario Anual - Año {{ year }}</h1>
     <form method="get" action="/">
-        <label for="year">Year:</label>
+        <label for="year">Año:</label>
         <input type="number" id="year" name="year" value="{{ year }}">
-        <label for="start_day">Weekday calendar starts on:</label>
+        <label for="start_day">Día de inicio de la semana:</label>
         <select id="start_day" name="start_day">
-            <option value="0" {% if start_day == 0 %}selected{% endif %}>Monday</option>
-            <option value="1" {% if start_day == 1 %}selected{% endif %}>Tuesday</option>
-            <option value="2" {% if start_day == 2 %}selected{% endif %}>Wednesday</option>
-            <option value="3" {% if start_day == 3 %}selected{% endif %}>Thursday</option>
-            <option value="4" {% if start_day == 4 %}selected{% endif %}>Friday</option>
-            <option value="5" {% if start_day == 5 %}selected{% endif %}>Saturday</option>
-            <option value="6" {% if start_day == 6 %}selected{% endif %}>Sunday</option>
+            <option value="0" {% if start_day == 0 %}selected{% endif %}>Lunes</option>
+            <option value="1" {% if start_day == 1 %}selected{% endif %}>Martes</option>
+            <option value="2" {% if start_day == 2 %}selected{% endif %}>Miércoles</option>
+            <option value="3" {% if start_day == 3 %}selected{% endif %}>Jueves</option>
+            <option value="4" {% if start_day == 4 %}selected{% endif %}>Viernes</option>
+            <option value="5" {% if start_day == 5 %}selected{% endif %}>Sábado</option>
+            <option value="6" {% if start_day == 6 %}selected{% endif %}>Domingo</option>
         </select>
         <button type="submit">Actualizar</button>
     </form>
