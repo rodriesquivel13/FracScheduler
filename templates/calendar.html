@@ -2,25 +2,27 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Calendario Anual</title>
+    <title>Fractional Calendar</title>
+    <!-- Importar la fuente -->
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Calendario Anual - Año {{ year }}</h1>
+    <h1>Fractional Calendar </h1>
     <form method="get" action="/">
-        <label for="year">Año:</label>
+        <label for="year">year:</label>
         <input type="number" id="year" name="year" value="{{ year }}">
-        <label for="start_day">Día de inicio de la semana:</label>
+        <label for="start_day">weekday calendar starts on:</label>
         <select id="start_day" name="start_day">
-            <option value="0" {% if start_day == 0 %}selected{% endif %}>Lunes</option>
-            <option value="1" {% if start_day == 1 %}selected{% endif %}>Martes</option>
-            <option value="2" {% if start_day == 2 %}selected{% endif %}>Miércoles</option>
-            <option value="3" {% if start_day == 3 %}selected{% endif %}>Jueves</option>
-            <option value="4" {% if start_day == 4 %}selected{% endif %}>Viernes</option>
-            <option value="5" {% if start_day == 5 %}selected{% endif %}>Sábado</option>
-            <option value="6" {% if start_day == 6 %}selected{% endif %}>Domingo</option>
+            <option value="0" {% if start_day == 0 %}selected{% endif %}>Monday</option>
+            <option value="1" {% if start_day == 1 %}selected{% endif %}>Tusday</option>
+            <option value="2" {% if start_day == 2 %}selected{% endif %}>Wednesday</option>
+            <option value="3" {% if start_day == 3 %}selected{% endif %}>Thursday</option>
+            <option value="4" {% if start_day == 4 %}selected{% endif %}>Friday</option>
+            <option value="5" {% if start_day == 5 %}selected{% endif %}>Saturday</option>
+            <option value="6" {% if start_day == 6 %}selected{% endif %}>Sunday</option>
         </select>
-        <button type="submit">Actualizar</button>
+        <button type="submit">Update</button>
     </form>
     <div class="calendar">
         {% for month_index, month in months_with_index %}

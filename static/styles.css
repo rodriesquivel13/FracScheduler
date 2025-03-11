@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Libre Baskerville', serif; /* Usamos Libre Baskerville como alternativa */
 }
 
 h1 {
@@ -18,8 +18,8 @@ form {
 }
 
 .month {
-    width: 30%;
-    margin: 10px;
+    width: 35%;
+    margin: 20px;
 }
 
 table {
