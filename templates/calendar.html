@@ -23,9 +23,9 @@
         <button type="submit">Actualizar</button>
     </form>
     <div class="calendar">
-        {% for month in months %}
+        {% for month_index, month in months_with_index %}
             <div class="month">
-                <h2>{{ calendar.month_name[loop.index] }}</h2>
+                <h2>{{ calendar.month_name[month_index + 1] }}</h2>
                 <table>
                     <thead>
                         <tr>
@@ -38,7 +38,11 @@
                         {% for week in month %}
                             <tr>
                                 {% for day in week %}
-                                    <td class="{{ 'empty' if day == 0 else '' }}">{{ day if day != 0 else '' }}</td>
+                                    {% set date = datetime(year, month_index + 1, day) if day != 0 else None %}
+                                    {% set fraction = fractional_indices.get(date) if date else None %}
+                                    <td class="{{ 'empty' if day == 0 else '' }}" style="background-color: {% if fraction %}{{ fraction_colors[fraction[0]] }}{% else %}#ffffff{% endif %};">
+                                        {{ day if day != 0 else '' }}
+                                    </td>
                                 {% endfor %}
                             </tr>
                         {% endfor %}
