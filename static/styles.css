@@ -1,16 +1,25 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
+
+form {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
 .calendar {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 columnas */
-    gap: 20px;
-    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .month {
-    background-color: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center;
+    width: 30%;
+    margin: 10px;
 }
 
 table {
@@ -19,11 +28,11 @@ table {
 }
 
 th, td {
-    padding: 8px;
+    border: 1px solid #000;
     text-align: center;
-    border: 1px solid black;
+    padding: 5px;
 }
 
-th {
-    background-color: #ddd;
+td.empty {
+    background-color: #f0f0f0;
 }

@@ -1,35 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yearly Calendar - {{ year }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Calendario Anual</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Yearly Calendar - {{ year }}</h1>
-    <div class="navigation">
-        <a href="/{{ year-1 }}">Previous Year</a>
-        <a href="/{{ year+1 }}">Next Year</a>
-    </div>
-
+    <h1>Fractional Calendar - {{ year }}</h1>
+    <form method="get" action="/">
+        <label for="year">Year:</label>
+        <input type="number" id="year" name="year" value="{{ year }}">
+        <label for="start_day">Weekday calendar starts on:</label>
+        <select id="start_day" name="start_day">
+            <option value="0" {% if start_day == 0 %}selected{% endif %}>Monday</option>
+            <option value="1" {% if start_day == 1 %}selected{% endif %}>Tuesday</option>
+            <option value="2" {% if start_day == 2 %}selected{% endif %}>Wednesday</option>
+            <option value="3" {% if start_day == 3 %}selected{% endif %}>Thursday</option>
+            <option value="4" {% if start_day == 4 %}selected{% endif %}>Friday</option>
+            <option value="5" {% if start_day == 5 %}selected{% endif %}>Saturday</option>
+            <option value="6" {% if start_day == 6 %}selected{% endif %}>Sunday</option>
+        </select>
+        <button type="submit">Actualizar</button>
+    </form>
     <div class="calendar">
-        {% for month_name, month_days in year_calendar.items() %}
-        <div class="month">
-            <h2>{{ month_name }}</h2>
-            <table>
-                <tr>
-                    <th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th>
-                </tr>
-                {% for week in month_days %}
-                <tr>
-                    {% for day in week %}
-                        <td>{{ day if day != 0 else '' }}</td>
-                    {% endfor %}
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
+        {% for month in months %}
+            <div class="month">
+                <h2>{{ calendar.month_name[loop.index] }}</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            {% for day in day_names %}
+                                <th>{{ day }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for week in month %}
+                            <tr>
+                                {% for day in week %}
+                                    <td class="{{ 'empty' if day == 0 else '' }}">{{ day if day != 0 else '' }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% endfor %}
     </div>
 </body>
