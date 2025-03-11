@@ -187,12 +187,12 @@ def fractional_index_maker(current_year, weekday_calendar_starts):
     """
     fractional_calendar_week_indexed = fractional_day_weeker(current_year,weekday_calendar_starts)
     week_index_list = list(fractional_calendar_week_indexed.values())
-    total_fractional_weeks_quantity = (weeks_expected_per_year - len(maintenance_weeks))
+    total_fractional_weeks_quantity = weeks_expected_per_year // fractions_quantity * fractions_quantity
 
     fraction_index_list = []
     for i in range(len(week_index_list)):
         week_index = week_index_list[i]
-        fraction_index = [((week_index[0] - current_year + (initial_year + fractions_quantity)) % total_fractional_weeks_quantity) % fractions_quantity]
+        fraction_index = [((week_index[0] - current_year + initial_year)  % total_fractional_weeks_quantity) % fractions_quantity]
         fraction_index_list.append(fraction_index)
 
     return dict(zip(fractional_calendar_week_indexed.keys(),fraction_index_list))
