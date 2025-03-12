@@ -1,21 +1,19 @@
-from flask import Flask, render_template
-import os
-
-app = Flask(__name__, template_folder="C:\\Users\\Rodrigo Esquivel\\OneDrive - TERRA VITAL\\Rodrigo Esquivel\\Documentos\\ARCHIVOS\\ANALÍTICA\\SEASCAPE\\CALENDARIO DE FRACCIONES\\codigo\\templates")
-
-@app.route("/")
-def home():
-    # Print the current template folder Flask is using
-    print("Template folder:", app.template_folder)
-    
-    # Try to manually check if the template file exists
-    template_path = os.path.join(app.template_folder, "chango.html")
-    if not os.path.exists(template_path):
-        print(f"Template not found at {template_path}")
-        return "Error: Template not found!", 500
-
-    return render_template("chango.html")
+from datetime import datetime, timedelta
+from utils import main_day_sequence, fractional_index_maker
 
 if __name__ == "__main__":
-    print("Flask is running!")
-    app.run(debug=True)
+
+    def unfractional_dates_list(current_year, weekday_calendar_starts):
+        whole_calendar = main_day_sequence(current_year,weekday_calendar_starts)
+        fractional_calendar = fractional_index_maker(current_year, weekday_calendar_starts)
+        
+        dates = list(whole_calendar.keys())
+        fractional_dates = list(fractional_calendar.keys())
+
+        for i in dates:
+            unfractional_dates = []
+            if i in dates and i not in fractional_dates:
+                unfractional_dates.append(i)
+            else:
+                pass
+        return unfractional_dates

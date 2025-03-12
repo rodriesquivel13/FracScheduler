@@ -11,9 +11,9 @@
     <h1>Fractional Calendar</h1>
     <form method="get" action="/">
         <label for="year">year:</label>
-        <input type="number" id="year" name="year" value="{{ year }}">
+        <input type="number" id="year" name="year" value="{{ year }}" class="form-button">
         <label for="start_day">weekday calendar starts on:</label>
-        <select id="start_day" name="start_day">
+        <select id="start_day" name="start_day" class="form-button">
             <option value="0" {% if start_day == 0 %}selected{% endif %}>Monday</option>
             <option value="1" {% if start_day == 1 %}selected{% endif %}>Tuesday</option>
             <option value="2" {% if start_day == 2 %}selected{% endif %}>Wednesday</option>
@@ -22,7 +22,23 @@
             <option value="5" {% if start_day == 5 %}selected{% endif %}>Saturday</option>
             <option value="6" {% if start_day == 6 %}selected{% endif %}>Sunday</option>
         </select>
-        <button type="submit">Update</button>
+        <fieldset class="fraction-selector">
+            <legend>Select fractions to paint:</legend>
+            <div class="fraction-container">
+                {% for i in range(8) %}
+                    <div class="fraction-item">
+                        <div class="fraction-color" style="background-color: {{ fraction_colors[i] }};"></div>
+                        <input type="checkbox" id="fraction_{{ i }}" name="fractions" value="{{ i }}" {% if i in selected_fractions %}checked{% endif %}>
+                        <label for="fraction_{{ i }}">Fraction {{ i }}</label>
+                    </div>
+                {% endfor %}
+                <div class="fraction-item">
+                    <input type="checkbox" id="fraction_all" name="fractions" value="all" {% if 'all' in selected_fractions %}checked{% endif %}>
+                    <label for="fraction_all">All</label>
+                </div>
+            </div>
+        </fieldset>
+        <button type="submit" class="form-button">Update</button>
     </form>
     <div class="calendar">
         {% if months_with_index[0][0] == 0 %}
@@ -43,7 +59,8 @@
                                     {% set date = datetime(year - 1, 12, day) if day != 0 else None %}
                                     {% set fraction = fractional_indices.get(date) if date else None %}
                                     {% set text_color = '#FFFFFF' if fraction and fraction[0] in [0, 2, 4, 6] else '#000000' %}
-                                    <td class="{{ 'empty' if day == 0 else '' }}" style="background-color: {% if fraction %}{{ fraction_colors[fraction[0]] }}{% else %}#ffffff{% endif %}; color: {{ text_color }};">
+                                    {% set paint_fraction = fraction and (fraction[0] in selected_fractions or 'all' in selected_fractions) %}
+                                    <td class="{{ 'empty' if day == 0 else '' }}" style="background-color: {% if paint_fraction %}{{ fraction_colors[fraction[0]] }}{% else %}#ffffff{% endif %}; color: {{ text_color }};">
                                         {{ day if day != 0 else '' }}
                                     </td>
                                 {% endfor %}
@@ -71,7 +88,8 @@
                                     {% set date = datetime(year, month_index + 1, day) if day != 0 else None %}
                                     {% set fraction = fractional_indices.get(date) if date else None %}
                                     {% set text_color = '#FFFFFF' if fraction and fraction[0] in [0, 2, 4, 6] else '#000000' %}
-                                    <td class="{{ 'empty' if day == 0 else '' }}" style="background-color: {% if fraction %}{{ fraction_colors[fraction[0]] }}{% else %}#ffffff{% endif %}; color: {{ text_color }};">
+                                    {% set paint_fraction = fraction and (fraction[0] in selected_fractions or 'all' in selected_fractions) %}
+                                    <td class="{{ 'empty' if day == 0 else '' }}" style="background-color: {% if paint_fraction %}{{ fraction_colors[fraction[0]] }}{% else %}#ffffff{% endif %}; color: {{ text_color }};">
                                         {{ day if day != 0 else '' }}
                                     </td>
                                 {% endfor %}

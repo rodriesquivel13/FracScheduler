@@ -9,6 +9,7 @@ h1 {
 form {
     text-align: center;
     margin-bottom: 20px;
+    font-size: 20px; /* Ajusta el tamaño de letra */
 }
 
 .calendar {
@@ -36,4 +37,47 @@ th, td {
 td.empty {
     background-color: #ffffff;  /* Asegurar que los campos vacíos sean completamente blancos */
     box-shadow: none;  /* Eliminar cualquier sombra */
+}
+
+.fraction-selector {
+    display: flex;
+    flex-direction: column;
+    font-size: 18px; /* Ajusta el tamaño de letra */
+    margin-top: 20px;
+    align-items: center; /* Centrar los elementos verticalmente */
+}
+.fraction-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center; /* Centrar los elementos horizontalmente */
+}
+.fraction-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.fraction-color {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border: 1px solid #000;
+}
+.fraction-item {
+    display: flex;
+    align-items: center;
+}
+.form-button {
+    font-size: 16px; /* Ajusta el tamaño de letra */
+    padding: 10px 20px; /* Ajusta el tamaño del botón */
+    margin-top: 10px; /* Espacio superior */
+    margin-bottom: 10px; /* Espacio inferior */
+    background-color: #1C85BE; /* Color de fondo */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+}
+.form-button:hover {
+    background-color: #4472C4; /* Color de fondo al pasar el cursor */
 }
