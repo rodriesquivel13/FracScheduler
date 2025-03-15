@@ -203,13 +203,14 @@ def fractional_index_maker(current_year, weekday_calendar_starts):
 
 if __name__ == "__main__":
     
-    """for k in range(7):
-        for i in range(2027, 2047):
-            if extra_week_indicator(i,k):
-                print(f'{i} - {k}')"""
-    """for i in range(2027,2047):
-        print(lunes_santo(i).weekday())
-    for i in range (2027,2047):
-        print(semana_santa_weeker(i,0), semana_diabla_weeker(i,0))"""
+   def unfractional_dates_list(current_year, weekday_calendar_starts):
+        """
+        """
+        whole_calendar = main_day_sequence(current_year,weekday_calendar_starts)
+        fractional_calendar = fractional_index_maker(current_year, weekday_calendar_starts)
+        
+        dates = list(whole_calendar.keys())
+        fractional_dates = list(fractional_calendar.keys())
 
-            
+
+        return dates
