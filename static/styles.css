@@ -81,3 +81,9 @@ td.empty {
 .form-button:hover {
     background-color: #4472C4; /* Color de fondo al pasar el cursor */
 }
+
+/* Estilos para las fechas no fraccionadas */
+td.unfractional {
+    background-color: #000000; /* Fondo negro */
+    color: #FFFFFF; /* Letras blancas */
+}

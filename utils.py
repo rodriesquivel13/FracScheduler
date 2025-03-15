@@ -78,7 +78,7 @@ def new_weekday(year,weekday_calendar_starts):
 """
 The really interesting thing here is, what does it happens with 365 % 7?,
 could those days acumulate itself into an "extra week"?.
-we gotta work on this doubts later soon.
+we gonna work on this doubts later soon.
 """
 weeks_expected_per_year = 365//7
 
@@ -181,6 +181,7 @@ def fractional_day_sequence(current_year, weekday_calendar_starts):
     return dict(zip(fractional_calendar_week_indexed.keys(),day_index_list))
 
 initial_year = 2027
+
 def fractional_index_maker(current_year, weekday_calendar_starts):
     """
     This function indexes each date with fraction's index.
@@ -197,6 +198,18 @@ def fractional_index_maker(current_year, weekday_calendar_starts):
 
     return dict(zip(fractional_calendar_week_indexed.keys(),fraction_index_list))
 
+def unfractional_dates_list(current_year, weekday_calendar_starts):
+    """
+    This funcion has as goal crafting a list with no fractional dates, such that,
+    this list must have the rest of the dates of each year.
+    """
+    whole_calendar = main_day_sequence(current_year, weekday_calendar_starts)
+    fractional_calendar = fractional_index_maker(current_year, weekday_calendar_starts)
+
+    dates = list(whole_calendar.keys())
+    fractional_dates = set(fractional_calendar.keys())  # We choose set instead of list for farter searching
+
+    return [i for i in dates if i not in fractional_dates]
 
 
 # ======== Test Block ========

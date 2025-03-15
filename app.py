@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 import calendar
 from datetime import datetime
-from utils import fractional_index_maker
+from utils import fractional_index_maker, unfractional_dates_list
 
 app = Flask(__name__)
 
@@ -30,16 +30,19 @@ def index():
     # Obtener diciembre del año anterior
     previous_december = cal.monthdayscalendar(year - 1, 12)
 
+    # Obtener las fechas no fraccionadas
+    unfractional_dates = unfractional_dates_list(year, start_day)
+
     # Obtener las fracciones seleccionadas
     selected_fractions = request.args.getlist('fractions', type=str)
     if 'all' in selected_fractions:
-        selected_fractions = list(range(8)) + ['all']
+        selected_fractions = list(range(8)) + ['unfractional', 'all']
     else:
-        selected_fractions = [int(f) for f in selected_fractions]
+        selected_fractions = [int(f) if f.isdigit() else f for f in selected_fractions]
 
     day_names = [calendar.day_name[(i + start_day) % 7] for i in range(7)]
     months_with_index = list(enumerate(months))
-    return render_template('calendar.html', year=year, months_with_index=months_with_index, start_day=start_day, day_names=day_names, calendar=calendar, fractional_indices=fractional_indices, fraction_colors=fraction_colors, datetime=datetime, previous_december=previous_december, selected_fractions=selected_fractions)
+    return render_template('calendar.html', year=year, months_with_index=months_with_index, start_day=start_day, day_names=day_names, calendar=calendar, fractional_indices=fractional_indices, fraction_colors=fraction_colors, datetime=datetime, previous_december=previous_december, selected_fractions=selected_fractions, unfractional_dates=unfractional_dates)
 
 if __name__ == '__main__':
     app.run(debug=True)
