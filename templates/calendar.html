@@ -62,10 +62,9 @@
                                 {% for day in week %}
                                     {% set date = datetime(year - 1, 12, day) if day != 0 else None %}
                                     {% set fraction = fractional_indices.get(date) if date else None %}
-                                    {% set text_color = '#FFFFFF' if fraction and fraction[0] in [0, 2, 4, 6] else '#000000' %}
-                                    {% set paint_fraction = fraction and (fraction[0] in selected_fractions or 'all' in selected_fractions) %}
                                     {% set is_unfractional = date in unfractional_dates %}
-                                    <td class="{{ 'empty' if day == 0 else '' }}" style="background-color: {% if is_unfractional %}#000000{% elif paint_fraction %}{{ fraction_colors[fraction[0]] }}{% else %}#ffffff{% endif %}; color: {% if is_unfractional %}#FFFFFF{% else %}{{ text_color }}{% endif %};">
+                                    {% set paint_fraction = fraction and (fraction[0] in selected_fractions or 'all' in selected_fractions) %}
+                                    <td class="{{ 'empty' if day == 0 else '' }}" style="background-color: {% if is_unfractional %}#000000{% elif paint_fraction %}{{ fraction_colors[fraction[0]] }}{% else %}#ffffff{% endif %}; color: {% if is_unfractional or paint_fraction %}#FFFFFF{% else %}#000000{% endif %};">
                                         {{ day if day != 0 else '' }}
                                     </td>
                                 {% endfor %}
@@ -92,10 +91,9 @@
                                 {% for day in week %}
                                     {% set date = datetime(year, month_index + 1, day) if day != 0 else None %}
                                     {% set fraction = fractional_indices.get(date) if date else None %}
-                                    {% set text_color = '#FFFFFF' if fraction and fraction[0] in [0, 2, 4, 6] else '#000000' %}
-                                    {% set paint_fraction = fraction and (fraction[0] in selected_fractions or 'all' in selected_fractions) %}
                                     {% set is_unfractional = date in unfractional_dates %}
-                                    <td class="{{ 'empty' if day == 0 else '' }}" style="background-color: {% if is_unfractional %}#000000{% elif paint_fraction %}{{ fraction_colors[fraction[0]] }}{% else %}#ffffff{% endif %}; color: {% if is_unfractional %}#FFFFFF{% else %}{{ text_color }}{% endif %};">
+                                    {% set paint_fraction = fraction and (fraction[0] in selected_fractions or 'all' in selected_fractions) %}
+                                    <td class="{{ 'empty' if day == 0 else '' }}" style="background-color: {% if is_unfractional %}#000000{% elif paint_fraction %}{{ fraction_colors[fraction[0]] }}{% else %}#ffffff{% endif %}; color: {% if is_unfractional or paint_fraction %}#FFFFFF{% else %}#000000{% endif %};">
                                         {{ day if day != 0 else '' }}
                                     </td>
                                 {% endfor %}

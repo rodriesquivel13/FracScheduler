@@ -40,6 +40,10 @@ def index():
     else:
         selected_fractions = [int(f) if f.isdigit() else f for f in selected_fractions]
 
+    # Asegurarse de que 'unfractional' solo esté seleccionado si está en selected_fractions
+    if 'unfractional' not in selected_fractions:
+        unfractional_dates = []
+
     day_names = [calendar.day_name[(i + start_day) % 7] for i in range(7)]
     months_with_index = list(enumerate(months))
     return render_template('calendar.html', year=year, months_with_index=months_with_index, start_day=start_day, day_names=day_names, calendar=calendar, fractional_indices=fractional_indices, fraction_colors=fraction_colors, datetime=datetime, previous_december=previous_december, selected_fractions=selected_fractions, unfractional_dates=unfractional_dates)
