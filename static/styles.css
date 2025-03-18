@@ -87,3 +87,20 @@ td.unfractional {
     background-color: #000000; /* Fondo negro */
     color: #FFFFFF; /* Letras blancas */
 }
+
+
+/* Estilos específicos para el botón de generar PDF */
+#pdfForm button {
+    font-size: 16px; /* Ajusta el tamaño de letra */
+    padding: 10px 20px; /* Ajusta el tamaño del botón */
+    margin-top: 10px; /* Espacio superior */
+    margin-bottom: 10px; /* Espacio inferior */
+    background-color: #1C85BE; /* Color de fondo */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+}
+#pdfForm button:hover {
+    background-color: #4472C4; /* Color de fondo al pasar el cursor */
+}

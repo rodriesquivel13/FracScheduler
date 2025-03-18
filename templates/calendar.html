@@ -110,6 +110,23 @@
             </div>
         {% endfor %}
     </div>
+
+    <!-- Formulario para generar PDF -->
+    <div id="pdfForm">
+        <h2>Generar PDF</h2>
+        <form method="get" action="/generate_pdf">
+            <label for="start_year">Año de inicio:</label>
+            <input type="number" id="start_year" name="start_year" required>
+            <label for="end_year">Año de fin:</label>
+            <input type="number" id="end_year" name="end_year" required>
+            <input type="hidden" name="start_day" value="{{ start_day }}">
+            {% for fraction in selected_fractions %}
+                <input type="hidden" name="fractions" value="{{ fraction }}">
+            {% endfor %}
+            <button type="submit">Generar PDF</button>
+        </form>
+    </div>
+
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
 </html>
