@@ -40,6 +40,10 @@
                     <input type="checkbox" id="fraction_all" name="fractions" value="all" {% if 'all' in selected_fractions %}checked{% endif %}>
                     <label for="fraction_all">All</label>
                 </div>
+                <div class="fraction-item">
+                    <input type="checkbox" id="fraction_none" name="fractions" value="none" onclick="deselectAll()">
+                    <label for="fraction_none">None</label>
+                </div>
             </div>
         </fieldset>
         <button type="submit" class="form-button">Update</button>
@@ -106,5 +110,11 @@
             </div>
         {% endfor %}
     </div>
+    <script>
+        function deselectAll() {
+            const checkboxes = document.querySelectorAll('input[name="fractions"]');
+            checkboxes.forEach(checkbox => checkbox.checked = false);
+        }
+    </script>
 </body>
 </html>
