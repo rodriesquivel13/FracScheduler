@@ -110,11 +110,6 @@
             </div>
         {% endfor %}
     </div>
-    <script>
-        function deselectAll() {
-            const checkboxes = document.querySelectorAll('input[name="fractions"]');
-            checkboxes.forEach(checkbox => checkbox.checked = false);
-        }
-    </script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
 </html>
