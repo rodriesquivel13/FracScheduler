@@ -14,13 +14,9 @@
         <input type="number" id="year" name="year" value="{{ year }}" class="form-button">
         <label for="start_day">weekday calendar starts on:</label>
         <select id="start_day" name="start_day" class="form-button">
-            <option value="0" {% if start_day == 0 %}selected{% endif %}>Monday</option>
             <option value="1" {% if start_day == 1 %}selected{% endif %}>Tuesday</option>
             <option value="2" {% if start_day == 2 %}selected{% endif %}>Wednesday</option>
             <option value="3" {% if start_day == 3 %}selected{% endif %}>Thursday</option>
-            <option value="4" {% if start_day == 4 %}selected{% endif %}>Friday</option>
-            <option value="5" {% if start_day == 5 %}selected{% endif %}>Saturday</option>
-            <option value="6" {% if start_day == 6 %}selected{% endif %}>Sunday</option>
         </select>
         <fieldset class="fraction-selector">
             <legend>Select fractions to paint:</legend>
@@ -113,17 +109,17 @@
 
     <!-- Formulario para generar PDF -->
     <div id="pdfForm">
-        <h2>Generar PDF</h2>
+        <h2>Export Fractional Dates to PDF</h2>
         <form method="get" action="/generate_pdf">
-            <label for="start_year">Año de inicio:</label>
+            <label for="start_year">Initial Year:</label>
             <input type="number" id="start_year" name="start_year" required>
-            <label for="end_year">Año de fin:</label>
+            <label for="end_year">Final Year:</label>
             <input type="number" id="end_year" name="end_year" required>
             <input type="hidden" name="start_day" value="{{ start_day }}">
             {% for fraction in selected_fractions %}
                 <input type="hidden" name="fractions" value="{{ fraction }}">
             {% endfor %}
-            <button type="submit">Generar PDF</button>
+            <button type="submit">Export</button>
         </form>
     </div>
 
