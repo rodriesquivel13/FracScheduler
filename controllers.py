@@ -22,8 +22,8 @@ fraction_colors = [
 
 @controllers.route('/')
 def index():
-    year = request.args.get('year', datetime.now().year, type=int)
-    start_day = request.args.get('start_day', 0, type=int)  # 0: Lunes, 6: Domingo
+    year = request.args.get('year',2027, type=int)
+    start_day = request.args.get('start_day', 1, type=int)  # 0: Lunes, 6: Domingo
     cal = calendar.Calendar(firstweekday=start_day)
     months = [cal.monthdayscalendar(year, i) for i in range(1, 13)]
     
