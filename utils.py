@@ -78,13 +78,13 @@ def new_weekday(year,weekday_calendar_starts):
 """
 The really interesting thing here is, what does it happens with 365 % 7?,
 could those days acumulate itself into an "extra week"?.
-we gonna work on this doubts later soon.
+we're gonna work on this doubts later soon.
 """
 weeks_expected_per_year = 365//7
 
 def extra_week_indicator(year,weekday_calendar_starts):
     """
-    We expect years have 52 weeks but actually, by the way we defined the first day of each year,
+    We expect years have 52 weeks but actually, by how we defined the first day of each year,
     some years have a 53rd week.
     This function tell us whether a year have that extra week.
     """
@@ -152,7 +152,7 @@ def fractional_day_weeker(current_year, weekday_calendar_starts):
     total_fractional_weeks = weeks_expected_per_year - len(maintenance_weeks)
 
     reorder_list = [[a] for a in range(total_fractional_weeks + 1) if a not in recerved_fractional_week_indexes]
-    expanded_reorder_list = [ a for a in reorder_list for _ in range(7)]
+    expanded_reorder_list = [a for a in reorder_list for _ in range(7)]
     week_fractional_indexes =  dict(zip(unspecial_week_indexes.keys(),expanded_reorder_list))
 
     for date in day_week_indexes_dic.keys():
@@ -198,6 +198,23 @@ def fractional_index_maker(current_year, weekday_calendar_starts):
 
     return dict(zip(fractional_calendar_week_indexed.keys(),fraction_index_list))
 
+
+def fraction_hunter(wishful_year, wishful_month, wishful_day, weekday_calendar_starts):
+
+    calendar_1 = fractional_index_maker(wishful_year, weekday_calendar_starts)
+    calendar_2 = fractional_index_maker(wishful_year + 1, weekday_calendar_starts)
+
+    fraction_spot = {**calendar_1, **calendar_2}
+
+    wishful_date = datetime(wishful_year, wishful_month, wishful_day)
+
+    try: 
+        return fraction_spot[wishful_date]
+    except KeyError:
+        return f"So sorry, your wishful date '{wishful_date}' isn't available due our current schedule "
+
+
+
 def unfractional_dates_list(current_year, weekday_calendar_starts):
     """
     This funcion has as goal crafting a list with no fractional dates, such that,
@@ -207,23 +224,16 @@ def unfractional_dates_list(current_year, weekday_calendar_starts):
     fractional_calendar = fractional_index_maker(current_year, weekday_calendar_starts)
 
     dates = list(whole_calendar.keys())
-    fractional_dates = set(fractional_calendar.keys())  # We choose set instead of list for farter searching
+    fractional_dates = set(fractional_calendar.keys())  # We choose set instead of list for faster searching
 
     return [i for i in dates if i not in fractional_dates]
 
 
 # ======== Test Block ========
 
+
 if __name__ == "__main__":
     
-   def unfractional_dates_list(current_year, weekday_calendar_starts):
-        """
-        """
-        whole_calendar = main_day_sequence(current_year,weekday_calendar_starts)
-        fractional_calendar = fractional_index_maker(current_year, weekday_calendar_starts)
-        
-        dates = list(whole_calendar.keys())
-        fractional_dates = list(fractional_calendar.keys())
-
-
-        return dates
+   test = fraction_hunter(2029,3,5,2)
+   
+   print(f"Fraction for your wishful date actually is '{test}'")

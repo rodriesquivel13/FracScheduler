@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, send_file
 import calendar
 from datetime import datetime
-from utils import fractional_index_maker, unfractional_dates_list
+from utils import fractional_index_maker, unfractional_dates_list, fraction_hunter
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import io
@@ -85,3 +85,38 @@ def generate_pdf():
     buffer.seek(0)
 
     return send_file(buffer, as_attachment=True, download_name=f"fracciones_{start_year}_{end_year}.pdf", mimetype='application/pdf')
+
+@controllers.route('/hunt_fraction')
+def hunt_fraction():
+    from utils import fraction_hunter  # Asegúrate que esté accesible
+
+    date_str = request.args.get('hunter_date')  # formato: yyyy-mm-dd
+    start_day = request.args.get('start_day', 1, type=int)
+
+    if not date_str:
+        return "No date provided", 400
+
+    try:
+        wishful_date = datetime.strptime(date_str, "%Y-%m-%d")
+        result = fraction_hunter(wishful_date.year, wishful_date.month, wishful_date.day, start_day)
+    except ValueError:
+        return "Invalid date format", 400
+
+    # Si retorna string (error personalizado), mostrarlo
+    if isinstance(result, str):
+        return result, 404
+
+    # Redirige al calendario, con la fracción correspondiente preseleccionada
+    return render_template('calendar.html',
+        year=wishful_date.year,
+        start_day=start_day,
+        months_with_index=[(i, calendar.Calendar(firstweekday=start_day).monthdayscalendar(wishful_date.year, i+1)) for i in range(12)],
+        day_names=[calendar.day_name[(i + start_day) % 7] for i in range(7)],
+        calendar=calendar,
+        fractional_indices=fractional_index_maker(wishful_date.year, start_day),
+        previous_december=calendar.Calendar(firstweekday=start_day).monthdayscalendar(wishful_date.year - 1, 12),
+        fraction_colors=fraction_colors,
+        datetime=datetime,
+        selected_fractions=[result[0]],  # Esto selecciona el checkbox correcto
+        unfractional_dates=[],  # Por ahora no mostramos unfractional
+    )
