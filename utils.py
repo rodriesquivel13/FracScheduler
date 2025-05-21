@@ -121,7 +121,32 @@ def semana_diabla_weeker(year, weekday_calendar_starts):
 # ======== Fractions-related functions ========
 
 fractions_quantity = 8
-maintenance_weeks = [[9],[35]]
+
+def maintenance_weeks_maker(current_year, weekday_calendar_starts):
+    maintenance_weeks = [[8],[21],[34],[47]]
+    if extra_week_indicator(current_year,weekday_calendar_starts):
+        maintenance_weeks.append([27])
+    else:
+        pass
+
+    day_week_indexes_dic = main_day_weeker(current_year,weekday_calendar_starts) 
+
+    if day_week_indexes_dic[datetime(current_year,2,14)] == [8]:
+        maintenance_weeks[0] = [9]
+    else:
+        pass
+
+    if day_week_indexes_dic[datetime(current_year,5,10)] == [21]:
+        maintenance_weeks[1] = [22]
+    else:
+        pass
+
+    if day_week_indexes_dic[datetime(current_year,11,20)] == [47]:
+        maintenance_weeks[3] = [48]
+    else:
+        pass
+    return maintenance_weeks
+
 
 def fractional_day_weeker(current_year, weekday_calendar_starts):
     """
@@ -129,20 +154,11 @@ def fractional_day_weeker(current_year, weekday_calendar_starts):
     """
     semana_santa_index = semana_santa_weeker(current_year,weekday_calendar_starts)
     semana_diabla_index = semana_diabla_weeker(current_year,weekday_calendar_starts)
-
+    maintenance_weeks = maintenance_weeks_maker(current_year,weekday_calendar_starts)
+    
     special_weeks = []
-
     special_weeks.append(semana_santa_index)
     special_weeks.append(semana_diabla_index)
-
-    weeks_out_scheme_quantity = (weeks_expected_per_year - len(maintenance_weeks)) % fractions_quantity
-
-    if extra_week_indicator(current_year,weekday_calendar_starts):
-        for i in range(1,weeks_out_scheme_quantity + 2):
-            special_weeks.append([semana_diabla_index[0] + i])
-    else:
-        for i in range(1,weeks_out_scheme_quantity + 1):
-            special_weeks.append([semana_diabla_index[0] + i])
 
     day_week_indexes_dic = main_day_weeker(current_year,weekday_calendar_starts)  
     week_indexes_after_maintenance = {k: v for k,v in day_week_indexes_dic.items() if v not in maintenance_weeks}
@@ -234,6 +250,7 @@ def unfractional_dates_list(current_year, weekday_calendar_starts):
 
 if __name__ == "__main__":
     
-   test = fraction_hunter(2029,3,5,2)
+   test = main_day_weeker(2029,1)
+   date = test[datetime(2029,11,20)]
    
-   print(f"Fraction for your wishful date actually is '{test}'")
+   print(f"Mexican Revolution is week  '{date}'")
