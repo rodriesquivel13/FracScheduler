@@ -129,19 +129,20 @@ def maintenance_weeks_maker(current_year, weekday_calendar_starts):
     else:
         pass
 
+    def third_november_monday(current_year):
+        count = 0
+        for day in range(1, 31):  # november has 30 days
+            fecha = datetime(current_year, 11, day)
+            if fecha.weekday() == 0:  # monday is equal to 0
+                count += 1
+                if count == 3:
+                    return fecha
+
+    november_third = third_november_monday(current_year)
     day_week_indexes_dic = main_day_weeker(current_year,weekday_calendar_starts) 
+    
 
-    if day_week_indexes_dic[datetime(current_year,2,14)] == [8]:
-        maintenance_weeks[0] = [9]
-    else:
-        pass
-
-    if day_week_indexes_dic[datetime(current_year,5,10)] == [21]:
-        maintenance_weeks[1] = [22]
-    else:
-        pass
-
-    if day_week_indexes_dic[datetime(current_year,11,20)] == [47]:
+    if day_week_indexes_dic[november_third] == [47]:
         maintenance_weeks[3] = [48]
     else:
         pass
