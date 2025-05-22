@@ -123,13 +123,20 @@ def semana_diabla_weeker(year, weekday_calendar_starts):
 fractions_quantity = 8
 
 def maintenance_weeks_maker(current_year, weekday_calendar_starts):
+    """
+    This function preselects some week's indexes for maintenace and update them according of some year's features.
+    """
     maintenance_weeks = [[8],[21],[34],[47]]
     if extra_week_indicator(current_year,weekday_calendar_starts):
         maintenance_weeks.append([27])
     else:
         pass
 
-    def third_november_monday(current_year):
+    def mexican_revolution_day(current_year):
+        """
+        Since 2006 mexican government decreed day of the revolution will celebrated on third monday of november in each year.
+        So, this function calculates when is that particular monday.
+        """
         count = 0
         for day in range(1, 31):  # november has 30 days
             fecha = datetime(current_year, 11, day)
@@ -138,7 +145,7 @@ def maintenance_weeks_maker(current_year, weekday_calendar_starts):
                 if count == 3:
                     return fecha
 
-    november_third = third_november_monday(current_year)
+    november_third = mexican_revolution_day(current_year)
     day_week_indexes_dic = main_day_weeker(current_year,weekday_calendar_starts) 
     
 
@@ -147,7 +154,6 @@ def maintenance_weeks_maker(current_year, weekday_calendar_starts):
     else:
         pass
     return maintenance_weeks
-
 
 def fractional_day_weeker(current_year, weekday_calendar_starts):
     """
@@ -217,7 +223,9 @@ def fractional_index_maker(current_year, weekday_calendar_starts):
 
 
 def fraction_hunter(wishful_year, wishful_month, wishful_day, weekday_calendar_starts):
-
+    """
+    This function searches what fraction is needed for a specific wishful date.      
+    """
     calendar_1 = fractional_index_maker(wishful_year, weekday_calendar_starts)
     calendar_2 = fractional_index_maker(wishful_year + 1, weekday_calendar_starts)
 
