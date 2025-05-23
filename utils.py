@@ -147,7 +147,6 @@ def maintenance_weeks_maker(current_year, weekday_calendar_starts):
     november_third_monday = mexican_revolution_day(current_year)
     day_week_indexes_dic = main_day_weeker(current_year,weekday_calendar_starts) 
     
-
     if day_week_indexes_dic[november_third_monday] == [47]:
         maintenance_weeks[3] = [48]
     else:
@@ -220,7 +219,6 @@ def fractional_index_maker(current_year, weekday_calendar_starts):
 
     return dict(zip(fractional_calendar_week_indexed.keys(),fraction_index_list))
 
-
 def fraction_hunter(wishful_year, wishful_month, wishful_day, weekday_calendar_starts):
     """
     This function searches what fraction is needed for a specific wishful date.      
@@ -237,8 +235,6 @@ def fraction_hunter(wishful_year, wishful_month, wishful_day, weekday_calendar_s
     except KeyError:
         return f"So sorry, your wishful date '{wishful_date}' isn't available due our current schedule "
 
-
-
 def unfractional_dates_list(current_year, weekday_calendar_starts):
     """
     This funcion has as goal crafting a list with no fractional dates, such that,
@@ -252,9 +248,7 @@ def unfractional_dates_list(current_year, weekday_calendar_starts):
 
     return [i for i in dates if i not in fractional_dates]
 
-
 # ======== Test Block ========
-
 
 if __name__ == "__main__":
     
