@@ -28,7 +28,6 @@ def lunes_santo(year):
     return gauss_easter(year) - timedelta(days = 6)
 
 # ======== Date-related functions ========
-
 def first_day_first_week(year, weekday_calendar_starts): 
     """
     We'll use a calendar that lists its weeks.
@@ -145,11 +144,11 @@ def maintenance_weeks_maker(current_year, weekday_calendar_starts):
                 if count == 3:
                     return fecha
 
-    november_third = mexican_revolution_day(current_year)
+    november_third_monday = mexican_revolution_day(current_year)
     day_week_indexes_dic = main_day_weeker(current_year,weekday_calendar_starts) 
     
 
-    if day_week_indexes_dic[november_third] == [47]:
+    if day_week_indexes_dic[november_third_monday] == [47]:
         maintenance_weeks[3] = [48]
     else:
         pass
