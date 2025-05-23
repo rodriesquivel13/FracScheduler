@@ -225,10 +225,10 @@ def fraction_hunter(wishful_year, wishful_month, wishful_day, weekday_calendar_s
     """
     This function searches what fraction is needed for a specific wishful date.      
     """
-    calendar_1 = fractional_index_maker(wishful_year, weekday_calendar_starts)
-    calendar_2 = fractional_index_maker(wishful_year + 1, weekday_calendar_starts)
+    current_calendar = fractional_index_maker(wishful_year, weekday_calendar_starts)
+    next_calendar = fractional_index_maker(wishful_year + 1, weekday_calendar_starts)
 
-    fraction_spot = {**calendar_1, **calendar_2}
+    fraction_spot = {**current_calendar, **next_calendar}
 
     wishful_date = datetime(wishful_year, wishful_month, wishful_day)
 
