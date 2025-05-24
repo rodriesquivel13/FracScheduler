@@ -22,7 +22,7 @@ fraction_colors = [
 
 @controllers.route('/')
 def index():
-    year = request.args.get('year',2027, type=int)
+    year = request.args.get('year', 2027, type=int)
     start_day = request.args.get('start_day', 1, type=int)  # 0: Lunes, 6: Domingo
     cal = calendar.Calendar(firstweekday=start_day)
     months = [cal.monthdayscalendar(year, i) for i in range(1, 13)]
@@ -43,13 +43,18 @@ def index():
     else:
         selected_fractions = [int(f) if f.isdigit() else f for f in selected_fractions]
 
-    # Asegurarse de que 'unfractional' solo esté seleccionado si está en selected_fractions
+    # Si no se selecciona 'unfractional', se omiten esas fechas
     if 'unfractional' not in selected_fractions:
         unfractional_dates = []
 
-    day_names = [calendar.day_name[(i + start_day) % 7] for i in range(7)]
+    # Usar abreviaturas de 3 letras para los días de la semana
+    day_names = [calendar.day_abbr[(i + start_day) % 7] for i in range(7)]
     months_with_index = list(enumerate(months))
-    return render_template('calendar.html', year=year, months_with_index=months_with_index, start_day=start_day, day_names=day_names, calendar=calendar, fractional_indices=fractional_indices, fraction_colors=fraction_colors, datetime=datetime, previous_december=previous_december, selected_fractions=selected_fractions, unfractional_dates=unfractional_dates)
+    return render_template('calendar.html', year=year, months_with_index=months_with_index, start_day=start_day,
+                           day_names=day_names, calendar=calendar, fractional_indices=fractional_indices,
+                           fraction_colors=fraction_colors, datetime=datetime,
+                           previous_december=previous_december, selected_fractions=selected_fractions,
+                           unfractional_dates=unfractional_dates)
 
 @controllers.route('/generate_pdf')
 def generate_pdf():
@@ -84,11 +89,12 @@ def generate_pdf():
     c.save()
     buffer.seek(0)
 
-    return send_file(buffer, as_attachment=True, download_name=f"fracciones_{start_year}_{end_year}.pdf", mimetype='application/pdf')
+    return send_file(buffer, as_attachment=True, download_name=f"fracciones_{start_year}_{end_year}.pdf",
+                     mimetype='application/pdf')
 
 @controllers.route('/hunt_fraction')
 def hunt_fraction():
-    from utils import fraction_hunter  # Asegúrate que esté accesible
+    from utils import fraction_hunter  # Asegurarse que esté accesible
 
     date_str = request.args.get('hunter_date')  # formato: yyyy-mm-dd
     start_day = request.args.get('start_day', 1, type=int)
@@ -102,21 +108,20 @@ def hunt_fraction():
     except ValueError:
         return "Invalid date format", 400
 
-    # Si retorna string (error personalizado), mostrarlo
     if isinstance(result, str):
         return result, 404
 
-    # Redirige al calendario, con la fracción correspondiente preseleccionada
+    day_names = [calendar.day_abbr[(i + start_day) % 7] for i in range(7)]
     return render_template('calendar.html',
-        year=wishful_date.year,
-        start_day=start_day,
-        months_with_index=[(i, calendar.Calendar(firstweekday=start_day).monthdayscalendar(wishful_date.year, i+1)) for i in range(12)],
-        day_names=[calendar.day_name[(i + start_day) % 7] for i in range(7)],
-        calendar=calendar,
-        fractional_indices=fractional_index_maker(wishful_date.year, start_day),
-        previous_december=calendar.Calendar(firstweekday=start_day).monthdayscalendar(wishful_date.year - 1, 12),
-        fraction_colors=fraction_colors,
-        datetime=datetime,
-        selected_fractions=[result[0]],  # Esto selecciona el checkbox correcto
-        unfractional_dates=[],  # Por ahora no mostramos unfractional
-    )
+                           year=wishful_date.year,
+                           start_day=start_day,
+                           months_with_index=[(i, calendar.Calendar(firstweekday=start_day).monthdayscalendar(wishful_date.year, i+1)) for i in range(12)],
+                           day_names=day_names,
+                           calendar=calendar,
+                           fractional_indices=fractional_index_maker(wishful_date.year, start_day),
+                           previous_december=calendar.Calendar(firstweekday=start_day).monthdayscalendar(wishful_date.year - 1, 12),
+                           fraction_colors=fraction_colors,
+                           datetime=datetime,
+                           selected_fractions=[result[0]],
+                           unfractional_dates=[],
+                           )
