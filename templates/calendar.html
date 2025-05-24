@@ -122,22 +122,22 @@
             </table>
         </div>
         {% endfor %}
-    </div>
 
-    <!-- Formulario para generar PDF -->
-    <div id="pdfForm">
-        <h2>Export Fractional Dates to PDF</h2>
-        <form method="get" action="/generate_pdf">
-            <label for="start_year">Initial Year:</label>
-            <input type="number" id="start_year" name="start_year" required>
-            <label for="end_year">Final Year:</label>
-            <input type="number" id="end_year" name="end_year" required>
-            <input type="hidden" name="start_day" value="{{ start_day }}">
-            {% for fraction in selected_fractions %}
-            <input type="hidden" name="fractions" value="{{ fraction }}">
-            {% endfor %}
-            <button type="submit">Export</button>
-        </form>
+        <!-- Bloque de Export: Se ubicará en el espacio libre (fila 5, columnas 2 y 3) sin borde ni fondo -->
+        <div id="pdfForm">
+            <h2>Export Fractional Dates to PDF</h2>
+            <form method="get" action="/generate_pdf">
+                <label for="start_year">Initial Year:</label>
+                <input type="number" id="start_year" name="start_year" required>
+                <label for="end_year">Final Year:</label>
+                <input type="number" id="end_year" name="end_year" required>
+                <input type="hidden" name="start_day" value="{{ start_day }}">
+                {% for fraction in selected_fractions %}
+                <input type="hidden" name="fractions" value="{{ fraction }}">
+                {% endfor %}
+                <button type="submit">Export</button>
+            </form>
+        </div>
     </div>
 
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>

@@ -32,7 +32,7 @@ table {
     table-layout: fixed;
 }
 
-/* Para que los encabezados y celdas se muestren en forma tradicional horizontal y compacta */
+/* Encabezados y celdas: disposición tradicional horizontal y compacta */
 th, td {
     text-align: center;
     padding: 2px;
@@ -41,7 +41,6 @@ th, td {
     vertical-align: middle;
 }
 
-/* Puedes ajustar el tamaño de los encabezados si lo deseas */
 th {
     font-size: 14px;
 }
@@ -76,7 +75,7 @@ th {
     align-items: center;
 }
 
-/* Botones de formulario y PDF */
+/* Botones de formulario y de exportación */
 .form-button {
     font-size: 16px;
     padding: 10px 20px;
@@ -105,6 +104,15 @@ th {
 }
 #pdfForm button:hover {
     background-color: #4472C4;
+}
+
+/* Eliminamos bordes y fondo; ubicamos el bloque en la celda vacía de la grilla (fila 5, columnas 2 y 3)
+   De este modo, su ancho se alinea con el de los calendarios de octubre y noviembre */
+#pdfForm {
+    grid-column: 2 / span 2;
+    background: transparent;
+    border: none;
+    padding: 0;
 }
 
 /* Estilos para las fechas no fraccionadas */
