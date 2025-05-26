@@ -1,6 +1,9 @@
 from datetime import datetime, timedelta
+from skyfield.api import load, N, W
+from skyfield import almanac
+import pytz
 
-# ======== Easter calculations ========
+# ======== Dates Numerical Calculations ========
 def gauss_easter(year):
     """
     Gauss' model for calculating the date of easter's beginning
@@ -79,6 +82,7 @@ The really interesting thing here is, what does it happens with 365 % 7?,
 could those days acumulate itself into an "extra week"?.
 we're gonna work on this doubts later soon.
 """
+
 weeks_expected_per_year = 365//7
 
 def extra_week_indicator(year,weekday_calendar_starts):
@@ -252,7 +256,35 @@ def unfractional_dates_list(current_year, weekday_calendar_starts):
 
 if __name__ == "__main__":
     
-   test = main_day_weeker(2029,1)
-   date = test[datetime(2029,11,20)]
-   
-   print(f"Mexican Revolution is week  '{date}'")
+    year = 2025
+    ts = load.timescale()
+    eph = load('de421.bsp')  # Cargar efemérides astronómicas
+
+    # Ubicación de San Carlos, Sonora, México (aproximada)
+    lat, lon = 27.9534, -111.0610  # San Carlos
+    san_carlos_tz = pytz.timezone('America/Hermosillo')
+
+    t0 = ts.utc(year, 1, 1)
+    t1 = ts.utc(year, 12, 31)
+
+    # Buscar eventos astronómicos de estaciones
+    times, events = almanac.find_discrete(t0, t1, almanac.seasons(eph))
+
+    estaciones = {}
+    for ti, ev in zip(times, events):
+        # Convertir a hora local de San Carlos
+        dt_utc = ti.utc_datetime()
+        dt_local = dt_utc.replace(tzinfo=pytz.utc).astimezone(san_carlos_tz)
+
+        nombre_evento = {
+            0: "Primavera",
+            1: "Verano",
+            2: "Otoño",
+            3: "Invierno"
+        }[ev]
+
+        estaciones[nombre_evento] = dt_local
+
+    print(f'{estaciones}')
+    
+    
