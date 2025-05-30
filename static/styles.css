@@ -143,3 +143,13 @@ td.unfractional {
     90% { opacity: 1; }
     100% { opacity: 0; }
 }
+/* Círculo alrededor de la fecha iluminada */
+.date-circle {
+  display: inline-block;
+  width: 28px;           /* ajusta al tamaño de tu celda */
+  height: 28px;          /* mismo diámetro que el ancho */
+  line-height: 28px;     /* centra verticalmente el número */
+  border-radius: 50%;    /* lo convierte en círculo */
+  text-align: center;    /* centra el texto */
+  vertical-align: middle;
+}
