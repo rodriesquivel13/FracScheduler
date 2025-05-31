@@ -19,11 +19,12 @@
     <label for="year">Year:</label>
     <input type="number" id="year" name="year" value="{{ year }}" class="form-button">
 
-    <label for="start_day">Weekday calendar starts on:</label>
+    <!-- Se cambió a "Level" y se listan los números del 2 al 10 -->
+    <label for="start_day">Level:</label>
     <select id="start_day" name="start_day" class="form-button">
-      <option value="1" {% if start_day == 1 %}selected{% endif %}>Tuesday</option>
-      <option value="2" {% if start_day == 2 %}selected{% endif %}>Wednesday</option>
-      <option value="3" {% if start_day == 3 %}selected{% endif %}>Thursday</option>
+      {% for level in range(2, 11) %}
+        <option value="{{ level }}" {% if start_day == level %}selected{% endif %}>{{ level }}</option>
+      {% endfor %}
     </select>
 
     <fieldset class="fraction-hunter">
@@ -187,22 +188,6 @@
         </table>
       </div>
     {% endfor %}
-
-    <!-- Bloque de Export PDF -->
-    <div id="pdfForm">
-      <h2>Export Fractional Dates to PDF</h2>
-      <form method="get" action="/generate_pdf">
-        <label for="start_year">Initial Year:</label>
-        <input type="number" id="start_year" name="start_year" required>
-        <label for="end_year">Final Year:</label>
-        <input type="number" id="end_year" name="end_year" required>
-        <input type="hidden" name="start_day" value="{{ start_day }}">
-        {% for f in selected_fractions %}
-          <input type="hidden" name="fractions" value="{{ f }}">
-        {% endfor %}
-        <button type="submit">Export</button>
-      </form>
-    </div>
   </div>
 
   <script src="{{ url_for('static', filename='scripts.js') }}"></script>
