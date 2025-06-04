@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Fractional Calendar</title>
-  <!-- Importar la fuente -->
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
@@ -19,7 +18,6 @@
     <label for="year">Year:</label>
     <input type="number" id="year" name="year" value="{{ year }}" class="form-button">
 
-    <!-- Se cambió a "Level" y se listan los números del 2 al 10 -->
     <label for="start_day">Level:</label>
     <select id="start_day" name="start_day" class="form-button">
       {% for level in range(2, 11) %}

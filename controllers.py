@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, send_file
+from flask import Blueprint, render_template, request, send_file 
 import calendar
 from datetime import datetime
 from utils import (
@@ -12,7 +12,7 @@ import io
 
 controllers = Blueprint('controllers', __name__)
 
-# Colores para las fracciones
+# Colors for fractions
 fraction_colors = [
     "#CC00CC",  # 0
     "#ADD8E6",  # 1
@@ -26,10 +26,10 @@ fraction_colors = [
 
 def map_level_to_internal(level):
     """
-    Mapea el nivel (valor del campo start_day en el formulario) a la lógica interna:
-      • 2, 5, 8    → 1 (equivalente a Tuesday)
-      • 3, 6, 9    → 2 (equivalente a Wednesday)
-      • 4, 7, 10   → 3 (equivalente a Thursday)
+    Maps the level (value of the start_day field in the form) to internal logic:
+      • 2, 5, 8    → 1 (equivalent to Tuesday)
+      • 3, 6, 9    → 2 (equivalent to Wednesday)
+      • 4, 7, 10   → 3 (equivalent to Thursday)
     """
     if level in (2, 5, 8):
         return 1
@@ -38,7 +38,7 @@ def map_level_to_internal(level):
     elif level in (4, 7, 10):
         return 3
     else:
-        return 1  # Fallback a Tuesday
+        return 1  # Fallback to Tuesday
 
 @controllers.route('/')
 def index():
@@ -46,7 +46,7 @@ def index():
     user_selected_level = request.args.get('start_day', 2, type=int)
     internal_start = map_level_to_internal(user_selected_level)
     
-    # Lógica interna: fracciones y unfractional para año -1, actual y +1
+    # Internal logic: fractions and unfractional for year -1, current, and +1
     fractional_indices      = fractional_index_maker(year, internal_start)
     fractional_indices_prev = fractional_index_maker(year - 1, internal_start)
     fractional_indices_next = fractional_index_maker(year + 1, internal_start)
@@ -55,14 +55,14 @@ def index():
     unfractional_dates_prev = unfractional_dates_list(year - 1, internal_start)
     unfractional_dates_next = unfractional_dates_list(year + 1, internal_start)
 
-    # Vista fija de lunes a domingo
+    # Fixed view from Monday to Sunday
     display_cal       = calendar.Calendar(firstweekday=0)
     months            = [display_cal.monthdayscalendar(year, m) for m in range(1, 13)]
     previous_december = display_cal.monthdayscalendar(year - 1, 12)
 
     day_names = [calendar.day_abbr[i] for i in range(7)]
 
-    # Fracciones seleccionadas
+    # Selected fractions
     selected_fractions = request.args.getlist('fractions', type=str)
     if 'all' in selected_fractions:
         selected_fractions = list(range(8)) + ['unfractional', 'all']
@@ -83,14 +83,14 @@ def index():
         calendar=calendar,
         fraction_colors=fraction_colors,
         datetime=datetime,
-        # Lógica interna
+        # Internal logic
         fractional_indices=fractional_indices,
         fractional_indices_prev=fractional_indices_prev,
         fractional_indices_next=fractional_indices_next,
         unfractional_dates=unfractional_dates,
         unfractional_dates_prev=unfractional_dates_prev,
         unfractional_dates_next=unfractional_dates_next,
-        # Vista fija
+        # Fixed view
         previous_december=previous_december,
         selected_fractions=selected_fractions
     )
@@ -108,12 +108,12 @@ def generate_pdf():
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     y = 750
-    c.drawString(100, y, f"Fechas de uso para fracciones: {', '.join(map(str, selected_fractions))}")
+    c.drawString(100, y, f"Usage dates for fractions: {', '.join(map(str, selected_fractions))}")
     y -= 20
 
     for year in range(start_year, end_year + 1):
         fractional_indices = fractional_index_maker(year, internal_start)
-        c.drawString(100, y, f"Año {year}")
+        c.drawString(100, y, f"Year {year}")
         y -= 20
         for date, frac in fractional_indices.items():
             if frac[0] in selected_fractions:
@@ -128,7 +128,7 @@ def generate_pdf():
     return send_file(
         buffer,
         as_attachment=True,
-        download_name=f"fracciones_{start_year}_{end_year}.pdf",
+        download_name=f"fractions_{start_year}_{end_year}.pdf",
         mimetype='application/pdf'
     )
 
@@ -155,7 +155,7 @@ def hunt_fraction():
     if isinstance(result, str):
         return result, 404
 
-    # Lógica interna para los tres años
+    # Internal logic for all three years
     fractional_indices      = fractional_index_maker(wishful_date.year, internal_start)
     fractional_indices_prev = fractional_index_maker(wishful_date.year - 1, internal_start)
     fractional_indices_next = fractional_index_maker(wishful_date.year + 1, internal_start)
@@ -164,7 +164,7 @@ def hunt_fraction():
     unfractional_dates_prev = unfractional_dates_list(wishful_date.year - 1, internal_start)
     unfractional_dates_next = unfractional_dates_list(wishful_date.year + 1, internal_start)
 
-    # Vista fija de lunes a domingo
+    # Fixed view from Monday to Sunday
     display_cal      = calendar.Calendar(firstweekday=0)
     months = [
         (i, display_cal.monthdayscalendar(wishful_date.year, i + 1))
@@ -183,13 +183,13 @@ def hunt_fraction():
         fraction_colors=fraction_colors,
         datetime=datetime,
         previous_december=previous_december,
-        # Lógica interna
+        # Internal logic
         fractional_indices=fractional_indices,
         fractional_indices_prev=fractional_indices_prev,
         fractional_indices_next=fractional_indices_next,
         unfractional_dates=unfractional_dates,
         unfractional_dates_prev=unfractional_dates_prev,
         unfractional_dates_next=unfractional_dates_next,
-        # Sólo mostramos la fracción hallada
+        # Show only the found fraction
         selected_fractions=[result[0]]
     )

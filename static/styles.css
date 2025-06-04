@@ -12,7 +12,7 @@ form {
     font-size: 20px;
 }
 
-/* Layout en grid: 3 columnas para mostrar cada mes */
+/* Grid layout: 3 columns to display each month */
 .calendar {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -32,7 +32,7 @@ table {
     table-layout: fixed;
 }
 
-/* Encabezados y celdas: disposición tradicional horizontal y compacta */
+/* Headers and cells: traditional horizontal and compact layout */
 th, td {
     text-align: center;
     padding: 2px;
@@ -45,7 +45,7 @@ th {
     font-size: 14px;
 }
 
-/* Estilos para el selector de fracciones */
+/* Styles for the fraction selector */
 .fraction-selector {
     display: flex;
     flex-direction: column;
@@ -53,29 +53,33 @@ th {
     margin-top: 20px;
     align-items: center;
 }
+
 .fraction-container {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     justify-content: center;
 }
+
 .fraction-label {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
 }
+
 .fraction-color {
     width: 20px;
     height: 20px;
     margin-right: 10px;
     border: 1px solid #000;
 }
+
 .fraction-item {
     display: flex;
     align-items: center;
 }
 
-/* Botones de formulario y de exportación */
+/* Form and export buttons */
 .form-button {
     font-size: 16px;
     padding: 10px 20px;
@@ -87,6 +91,7 @@ th {
     border-radius: 5px;
     cursor: pointer;
 }
+
 .form-button:hover {
     background-color: #4472C4;
 }
@@ -102,12 +107,13 @@ th {
     border-radius: 5px;
     cursor: pointer;
 }
+
 #pdfForm button:hover {
     background-color: #4472C4;
 }
 
-/* Eliminamos bordes y fondo; ubicamos el bloque en la celda vacía de la grilla (fila 5, columnas 2 y 3)
-   De este modo, su ancho se alinea con el de los calendarios de octubre y noviembre */
+/* Remove borders and background; place the block in the empty grid cell (row 5, columns 2 and 3)
+   This aligns its width with the October and November calendars */
 #pdfForm {
     grid-column: 2 / span 2;
     background: transparent;
@@ -115,13 +121,13 @@ th {
     padding: 0;
 }
 
-/* Estilos para las fechas no fraccionadas */
+/* Styles for non-fractional dates */
 td.unfractional {
     background-color: #000000;
     color: #FFFFFF;
 }
 
-/* Error flotante */
+/* Floating error message */
 .floating-error {
     position: fixed;
     top: 20px;
@@ -143,13 +149,14 @@ td.unfractional {
     90% { opacity: 1; }
     100% { opacity: 0; }
 }
-/* Círculo alrededor de la fecha iluminada */
+
+/* Circle around the highlighted date */
 .date-circle {
   display: inline-block;
-  width: 28px;           /* ajusta al tamaño de tu celda */
-  height: 28px;          /* mismo diámetro que el ancho */
-  line-height: 28px;     /* centra verticalmente el número */
-  border-radius: 50%;    /* lo convierte en círculo */
-  text-align: center;    /* centra el texto */
+  width: 28px;           /* adjusts to the size of your cell */
+  height: 28px;          /* same diameter as the width */
+  line-height: 28px;     /* vertically centers the number */
+  border-radius: 50%;    /* makes it a circle */
+  text-align: center;    /* centers the text */
   vertical-align: middle;
 }
