@@ -1,5 +1,9 @@
 from datetime import datetime, timedelta
 
+#============= Global Variables =====================
+fractions_quantity = 8
+weeks_expected_per_year = 365//7
+
 # ======== Dates Numerical Calculations ========
 def gauss_easter(year):
     """
@@ -74,14 +78,6 @@ def new_weekday(year,weekday_calendar_starts):
         day_index[0] = week_index
     return dic
 
-"""
-The really interesting thing here is, what does it happens with 365 % 7?,
-could those days acumulate itself into an "extra week"?.
-we're gonna work on this doubts later soon.
-"""
-
-weeks_expected_per_year = 365//7
-
 def extra_week_indicator(year,weekday_calendar_starts):
     """
     We expect years have 52 weeks but actually, by how we defined the first day of each year,
@@ -119,8 +115,6 @@ def semana_diabla_weeker(year, weekday_calendar_starts):
     return calendar[week_beginnig]
 
 # ======== Fractions-related functions ========
-
-fractions_quantity = 8
 
 def maintenance_weeks_maker(current_year, weekday_calendar_starts):
     """
@@ -202,8 +196,6 @@ def fractional_day_sequence(current_year, weekday_calendar_starts):
 
     return dict(zip(fractional_calendar_week_indexed.keys(),day_index_list))
 
-initial_year = 2027
-
 def fractional_index_maker(current_year, weekday_calendar_starts):
     """
     This function indexes each date with fraction's index.
@@ -215,7 +207,7 @@ def fractional_index_maker(current_year, weekday_calendar_starts):
     fraction_index_list = []
     for i in range(len(week_index_list)):
         week_index = week_index_list[i]
-        fraction_index = [((week_index[0] - current_year + initial_year)  % total_fractional_weeks_quantity) % fractions_quantity]
+        fraction_index = [((week_index[0] - (current_year % fractions_quantity))  % total_fractional_weeks_quantity) % fractions_quantity]
         fraction_index_list.append(fraction_index)
 
     return dict(zip(fractional_calendar_week_indexed.keys(),fraction_index_list))
