@@ -80,7 +80,8 @@ def new_weekday(year,weekday_calendar_starts):
 
 def extra_week_indicator(year,weekday_calendar_starts):
     """
-    We expect years have 52 weeks but actually, by how we defined the first day of each year,
+    We expect years have 52 weeks but actually,
+    by how we defined the first day of each year,
     some years have a 53rd week.
     This function tell us whether a year have that extra week.
     """
@@ -147,7 +148,7 @@ def maintenance_weeks_maker(current_year, weekday_calendar_starts):
     else:
         pass
     return maintenance_weeks
-
+    
 def fractional_day_weeker(current_year, weekday_calendar_starts):
     """
     This function lists weeks which are able to distribute their to fraction's owners.
