@@ -227,7 +227,7 @@ def fraction_hunter(wishful_year, wishful_month, wishful_day, weekday_calendar_s
     try: 
         return fraction_spot[wishful_date]
     except KeyError:
-        return f"So sorry, your wishful date '{wishful_date}' isn't available due our current schedule "
+        return f"So sorry, your wishful date '{wishful_date}' isn't available due our current schedule"
 
 def unfractional_dates_list(current_year, weekday_calendar_starts):
     """
