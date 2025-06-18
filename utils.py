@@ -40,7 +40,7 @@ def first_day_first_week(year, weekday_calendar_starts):
     This function caculates the date of the first day of the first week of each year and calendar, depending on which weekday it starts on.  
     """
     january_first = datetime(year,1,1)
-    shift = (january_first.weekday() - weekday_calendar_starts) % 7
+    shift = (january_first.weekday() - weekday_calendar_starts) % 7   
     return january_first - timedelta(days = shift)
 
 def main_day_sequence(year, weekday_calendar_starts):
@@ -98,7 +98,8 @@ def extra_week_indicator(year,weekday_calendar_starts):
 
 def semana_santa_weeker(year, weekday_calendar_starts):
     """
-    This functions return us the week index of semana semana each year, depending on which weekday it starts on.
+    This functions return us the week index of semana semana each year, 
+    depending on which weekday it starts on.
     """
     monday = lunes_santo(year)
     week_beginnig = monday + timedelta(days = weekday_calendar_starts)
