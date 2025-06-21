@@ -31,6 +31,65 @@ def lunes_santo(year):
     """
     return gauss_easter(year) - timedelta(days = 6)
 
+def new_year(current_year):
+    """
+    January first calculation
+    """
+    return datetime(current_year,1,1)
+
+
+def work_day(current_year):
+    """
+    Sometimes it could be a "puente" only if it is monday or friday.
+    """
+    date = datetime(current_year,5,1)
+    return date
+
+def independence_day(current_year):
+    """
+    Sometimes it could be a "puente" only if it is monday or friday.
+    """
+    date = datetime(current_year,9,16)
+    return date
+
+def constitution_day(current_year):
+    """
+    First Monday of each February. It ever be a "puente"
+    """
+    count = 0 
+    for day in range(1,29):
+        date = datetime(current_year,2,day)
+        if date.weekday() == 0:
+            count += 1
+            if count == 1:
+                return date
+            
+def benito_juarez_birthday(current_year):
+    """
+    Third Monday of each March. It ever be a "puente"
+    """
+    count = 0
+    for day in range(1, 32):  # March has 31 days
+        date = datetime(current_year, 3, day)
+        if date.weekday() == 0:  # monday is equal to 0
+            count += 1
+            if count == 3:
+                return date
+
+def mexican_revolution_day(current_year):
+    """
+    Since 2006 mexican government decreed day of the revolution will celebrated on third monday of november in each year.
+     So, this function calculates when is that particular monday.
+        """
+    count = 0
+    for day in range(1, 31):  # november has 30 days
+        date = datetime(current_year, 11, day)
+        if date.weekday() == 0:  # monday is equal to 0
+            count += 1
+            if count == 3:
+                return date
+
+
 # ======== Date-related functions ========
 def first_day_first_week(year, weekday_calendar_starts): 
     """
@@ -127,19 +186,6 @@ def maintenance_weeks_maker(current_year, weekday_calendar_starts):
         maintenance_weeks.append([27])
     else:
         pass
-
-    def mexican_revolution_day(current_year):
-        """
-        Since 2006 mexican government decreed day of the revolution will celebrated on third monday of november in each year.
-        So, this function calculates when is that particular monday.
-        """
-        count = 0
-        for day in range(1, 31):  # november has 30 days
-            fecha = datetime(current_year, 11, day)
-            if fecha.weekday() == 0:  # monday is equal to 0
-                count += 1
-                if count == 3:
-                    return fecha
 
     november_third_monday = mexican_revolution_day(current_year)
     day_week_indexes_dic = main_day_weeker(current_year,weekday_calendar_starts) 
