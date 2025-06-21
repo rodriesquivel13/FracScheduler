@@ -25,11 +25,17 @@ def gauss_easter(year):
     easter_day = ((h + l - 7 * m + 114) % 31) + 1
     return datetime(year,easter_month,easter_day)
 
-def lunes_santo(year): 
+def sabado_santo(year): 
     """
-    Function for calculating lunes santo (Samana Santa's Monday)
+    Function for calculating Sabado santo (Samana Santa's Saturday)
     """
-    return gauss_easter(year) - timedelta(days = 6)
+    return gauss_easter(year) - timedelta(days = 1)
+
+def easter_saturday(year):
+    """
+    Function for calculation easter's saturday.
+    """
+    return gauss_easter(year) + timedelta(days = 6)
 
 def new_year(current_year):
     """
@@ -37,7 +43,17 @@ def new_year(current_year):
     """
     return datetime(current_year,1,1)
 
+def valentines_day(current_year):
+    """
+    Valentine's Day calculation
+    """
+    return datetime(current_year,2,14)
 
+def mothers_day(current_day):
+    """
+    Mother's Day Calculation
+    """
+    return datetime(current_day,5,10)
 def work_day(current_year):
     """
     Sometimes it could be a "puente" only if it is monday or friday.
@@ -160,20 +176,19 @@ def semana_santa_weeker(year, weekday_calendar_starts):
     This functions return us the week index of semana semana each year, 
     depending on which weekday it starts on.
     """
-    monday = lunes_santo(year)
-    week_beginnig = monday + timedelta(days = weekday_calendar_starts)
+    saturday = sabado_santo(year)
     calendar = main_day_weeker(year,weekday_calendar_starts)
-    return calendar[week_beginnig]
+    return calendar[saturday]
 
-def semana_diabla_weeker(year, weekday_calendar_starts):
+def easter_weeker(year, weekday_calendar_starts):
     """
     This functions return us the week index of semana diabla (the week inmediatly after semana santa) each year,
     depending on which weekday it starts on.
     """
-    monday = gauss_easter(year) + timedelta(days = 1)
-    week_beginnig = monday + timedelta(days = weekday_calendar_starts)
+    saturday = easter_saturday(year)
     calendar = main_day_weeker(year,weekday_calendar_starts)
-    return calendar[week_beginnig]
+    return calendar[saturday]
+    
 
 # ======== Fractions-related functions ========
 
@@ -201,12 +216,12 @@ def fractional_day_weeker(current_year, weekday_calendar_starts):
     This function lists weeks which are able to distribute their to fraction's owners.
     """
     semana_santa_index = semana_santa_weeker(current_year,weekday_calendar_starts)
-    semana_diabla_index = semana_diabla_weeker(current_year,weekday_calendar_starts)
+    easter_index = easter_weeker(current_year,weekday_calendar_starts)
     maintenance_weeks = maintenance_weeks_maker(current_year,weekday_calendar_starts)
     
     special_weeks = []
     special_weeks.append(semana_santa_index)
-    special_weeks.append(semana_diabla_index)
+    special_weeks.append(easter_index)
 
     day_week_indexes_dic = main_day_weeker(current_year,weekday_calendar_starts)  
     week_indexes_after_maintenance = {k: v for k,v in day_week_indexes_dic.items() if v not in maintenance_weeks}
@@ -222,7 +237,7 @@ def fractional_day_weeker(current_year, weekday_calendar_starts):
     for date in day_week_indexes_dic.keys():
         if day_week_indexes_dic[date] == semana_santa_index:
             week_fractional_indexes[date] = [recerved_fractional_week_indexes[0]]
-        elif day_week_indexes_dic[date] == semana_diabla_index:
+        elif day_week_indexes_dic[date] == easter_index:
             week_fractional_indexes[date] = [recerved_fractional_week_indexes[1]]
         else:
             pass
