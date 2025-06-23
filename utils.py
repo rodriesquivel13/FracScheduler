@@ -254,6 +254,30 @@ def gold_weeks(current_year, weekday_calendar_starts):
     gold = [[k] for k in gold_num]
 
     return gold
+
+def regular_dates_weeker(current_year, weekday_calendar_starts):
+    """
+    
+    """
+    weeks_per_fraction = weeks_expected_per_year // fractions_quantity
+
+    reserved_weeks = weeks_expected_per_year - fractions_quantity * weeks_per_fraction
+    if extra_week_indicator(current_year,weekday_calendar_starts):
+        reserved_weeks +=1
+
+    calendar = main_day_weeker(current_year, weekday_calendar_starts)
+    gold = gold_weeks(current_year, weekday_calendar_starts)
+
+    regular = {k:v for (k,v) in calendar.items() if v not in gold}
+    list = [[i//7] for i in range(len(regular.values()))]
+    regular = dict(zip(regular.keys(),list))
+    bound = len(regular.keys()) // 7
+    max_regular_len = bound // reserved_weeks * reserved_weeks
+
+    dic = {k: v for k, v in regular.items() if v[0] < max_regular_len}
+
+    return {k:[v[0] % (max_regular_len // reserved_weeks)] for (k,v) in dic.items()}
+
 # ======== Fractions-related functions ========
 
 def maintenance_weeks_maker(current_year, weekday_calendar_starts):
