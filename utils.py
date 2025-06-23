@@ -43,6 +43,11 @@ def new_year(current_year):
     """
     return datetime(current_year,1,1)
 
+def christmas(current_year):
+    """
+    """
+    return datetime(current_year,12,25)
+
 def valentines_day(current_year):
     """
     Valentine's Day calculation
@@ -189,7 +194,66 @@ def easter_weeker(year, weekday_calendar_starts):
     calendar = main_day_weeker(year,weekday_calendar_starts)
     return calendar[saturday]
     
+def gold_weeks(current_year, weekday_calendar_starts):
+    """
+    """
 
+    def regular_unfractional_weeks(current_year,weekday_calendar_starts):
+        """
+        """
+        newyear = new_year(current_year)
+        constitution = constitution_day(current_year)
+        benito = benito_juarez_birthday(current_year)
+        revolution = mexican_revolution_day(current_year)
+        easter = easter_saturday(current_year)
+        semana_santa = sabado_santo(current_year)
+        christ = christmas(current_year)
+
+        special_dates = [newyear,constitution,benito,revolution,easter,semana_santa,christ]
+        calendar = main_day_weeker(current_year, weekday_calendar_starts)
+        week_index = []
+
+        for i in special_dates:
+            week = calendar[i]
+            week_index.append(week)
+
+        return week_index
+
+    def iregular_unfractional_weeks(current_year,weekday_calendar_starts):
+        """
+        """
+    
+        valentines = valentines_day(current_year)
+        mom = mothers_day(current_year)
+        work = work_day(current_year)
+        independence = independence_day(current_year)
+
+        special_dates = [valentines,mom,work,independence]
+        calendar = main_day_weeker(current_year, weekday_calendar_starts)
+        week_index = []
+
+        for i in special_dates:
+            week = calendar[i]
+            week_index.append(week)
+        
+        before_week_index = []
+        for k in week_index:
+            before_week_index.append([k[0] - 1])
+
+        return week_index + before_week_index
+
+    regular = regular_unfractional_weeks(current_year, weekday_calendar_starts)
+    irregular = iregular_unfractional_weeks(current_year, weekday_calendar_starts)
+
+    gold = []
+    for i in regular + irregular:
+        if i not in gold:
+            gold.append(i)
+    gold_num = [k[0] for k in gold]
+    gold_num.sort()
+    gold = [[k] for k in gold_num]
+
+    return gold
 # ======== Fractions-related functions ========
 
 def maintenance_weeks_maker(current_year, weekday_calendar_starts):
