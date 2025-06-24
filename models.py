@@ -1,4 +1,4 @@
-apartament_maitenance_path = {
+apartament_maintenance_path = {
     204: 1,
     205: 2,
     304: 1,
