@@ -45,33 +45,9 @@ def new_year(current_year):
 
 def christmas(current_year):
     """
+    christmas calculation
     """
     return datetime(current_year,12,25)
-
-def valentines_day(current_year):
-    """
-    Valentine's Day calculation
-    """
-    return datetime(current_year,2,14)
-
-def mothers_day(current_day):
-    """
-    Mother's Day Calculation
-    """
-    return datetime(current_day,5,10)
-def work_day(current_year):
-    """
-    Sometimes it could be a "puente" only if it is monday or friday.
-    """
-    date = datetime(current_year,5,1)
-    return date
-
-def independence_day(current_year):
-    """
-    Sometimes it could be a "puente" only if it is monday or friday.
-    """
-    date = datetime(current_year,9,16)
-    return date
 
 def constitution_day(current_year):
     """
@@ -109,7 +85,31 @@ def mexican_revolution_day(current_year):
             count += 1
             if count == 3:
                 return date
+            
+def valentines_day(current_year):
+    """
+    Valentine's Day calculation
+    """
+    return datetime(current_year,2,14)
 
+def mothers_day(current_day):
+    """
+    Mother's Day Calculation
+    """
+    return datetime(current_day,5,10)
+def work_day(current_year):
+    """
+    Sometimes it could be a "puente" only if it is monday or friday.
+    """
+    date = datetime(current_year,5,1)
+    return date
+
+def independence_day(current_year):
+    """
+    Sometimes it could be a "puente" only if it is monday or friday.
+    """
+    date = datetime(current_year,9,16)
+    return date
 
 # ======== Date-related functions ========
 def first_day_first_week(year, weekday_calendar_starts): 
@@ -194,12 +194,17 @@ def easter_weeker(year, weekday_calendar_starts):
     calendar = main_day_weeker(year,weekday_calendar_starts)
     return calendar[saturday]
     
-def gold_weeks(current_year, weekday_calendar_starts):
+def holly_weeks(current_year, weekday_calendar_starts):
     """
+    Some weeks have special dates which no one want to miss them. 
+    Those dates could be deterministic or probabilistic.
     """
 
-    def regular_unfractional_weeks(current_year,weekday_calendar_starts):
+    def deterministic_holly_weeks(current_year,weekday_calendar_starts):
         """
+        Deterministic hollydays are those which have an specific rule to determinate them,
+        for example mexican revolution day is third monday of each november, so this funcion return us 
+        the list of those weeks which have these hollydays.
         """
         newyear = new_year(current_year)
         constitution = constitution_day(current_year)
@@ -219,8 +224,12 @@ def gold_weeks(current_year, weekday_calendar_starts):
 
         return week_index
 
-    def iregular_unfractional_weeks(current_year,weekday_calendar_starts):
+    def probabilistic_holly_weeks(current_year,weekday_calendar_starts):
         """
+        Others dates don't let us get sure about whether the week which contains the date will the week when the date will celebrated.
+        For example, figure out independence day takes on tuesday and owr fractional week begins also in tusday but people wants to celecrate in previous momday.
+        It's worth to say, according the earlier case, if we take the weeks which have these dates and we take the previous week, we cover all the cases.
+        So, you can intuit what this function does.
         """
     
         valentines = valentines_day(current_year)
@@ -242,10 +251,10 @@ def gold_weeks(current_year, weekday_calendar_starts):
 
         return week_index + before_week_index
 
-    regular = regular_unfractional_weeks(current_year, weekday_calendar_starts)
-    irregular = iregular_unfractional_weeks(current_year, weekday_calendar_starts)
+    regular = deterministic_holly_weeks(current_year, weekday_calendar_starts)
+    irregular = probabilistic_holly_weeks(current_year, weekday_calendar_starts)
 
-    gold = []
+    gold = []                       # This block is looking for clean the list up.
     for i in regular + irregular:
         if i not in gold:
             gold.append(i)
@@ -265,7 +274,7 @@ def maintenance_weeks_paths(current_year, weekday_calendar_starts):
         reserved_weeks +=1
 
     calendar = main_day_weeker(current_year, weekday_calendar_starts)
-    gold = gold_weeks(current_year, weekday_calendar_starts)
+    gold = holly_weeks(current_year, weekday_calendar_starts)
 
     regular = {k:v for (k,v) in calendar.items() if v not in gold}
     list = [[i//7] for i in range(len(regular.values()))]
@@ -334,7 +343,6 @@ def fractional_day_weeker(current_year, weekday_calendar_starts, maintenance_pat
             pass
     
     return week_fractional_indexes
-
 
 def fractional_index_maker(current_year, weekday_calendar_starts, maintenance_path):
     """
