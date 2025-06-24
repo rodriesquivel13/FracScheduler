@@ -255,12 +255,11 @@ def gold_weeks(current_year, weekday_calendar_starts):
 
     return gold
 
-def regular_dates_weeker(current_year, weekday_calendar_starts):
+def maintenance_weeks_paths(current_year, weekday_calendar_starts):
     """
     
     """
     weeks_per_fraction = weeks_expected_per_year // fractions_quantity
-
     reserved_weeks = weeks_expected_per_year - fractions_quantity * weeks_per_fraction
     if extra_week_indicator(current_year,weekday_calendar_starts):
         reserved_weeks +=1
@@ -280,32 +279,36 @@ def regular_dates_weeker(current_year, weekday_calendar_starts):
 
 # ======== Fractions-related functions ========
 
-def maintenance_weeks_maker(current_year, weekday_calendar_starts):
+def maintenance_weeks_maker(current_year, weekday_calendar_starts, maintenance_path):
     """
-    This function preselects some week's indexes for maintenace and update them according of some year's features.
+    Select week indices for maintenance based on a path and the year characteristics.
     """
-    maintenance_weeks = [[8],[21],[34],[47]]
-    if extra_week_indicator(current_year,weekday_calendar_starts):
-        maintenance_weeks.append([27])
-    else:
-        pass
+    weeks_per_fraction = weeks_expected_per_year // fractions_quantity
+    reserved_weeks = weeks_expected_per_year - fractions_quantity * weeks_per_fraction
+    maintenance_deserved_weeks = maintenance_weeks_paths(current_year, weekday_calendar_starts)
+    lenght = len(maintenance_deserved_weeks.values()) // 7 // reserved_weeks
+    matching_keys = [k for (k,v) in maintenance_deserved_weeks.items() if v[0] == maintenance_path % lenght]
 
-    november_third_monday = mexican_revolution_day(current_year)
-    day_week_indexes_dic = main_day_weeker(current_year,weekday_calendar_starts) 
-    
-    if day_week_indexes_dic[november_third_monday] == [47]:
-        maintenance_weeks[3] = [48]
-    else:
-        pass
+    calendar = main_day_weeker(current_year,weekday_calendar_starts)
+
+    dirty_list = []
+    for i in matching_keys:
+        dirty_list.append(calendar[i])
+
+    maintenance_weeks = []
+    for r in dirty_list:
+        if r not in maintenance_weeks:
+            maintenance_weeks.append(r)
+        
     return maintenance_weeks
     
-def fractional_day_weeker(current_year, weekday_calendar_starts):
+def fractional_day_weeker(current_year, weekday_calendar_starts, maintenance_path):
     """
     This function lists weeks which are able to distribute their to fraction's owners.
     """
     semana_santa_index = semana_santa_weeker(current_year,weekday_calendar_starts)
     easter_index = easter_weeker(current_year,weekday_calendar_starts)
-    maintenance_weeks = maintenance_weeks_maker(current_year,weekday_calendar_starts)
+    maintenance_weeks = maintenance_weeks_maker(current_year,weekday_calendar_starts, maintenance_path)
     
     special_weeks = []
     special_weeks.append(semana_santa_index)
@@ -332,26 +335,12 @@ def fractional_day_weeker(current_year, weekday_calendar_starts):
     
     return week_fractional_indexes
 
-def fractional_day_sequence(current_year, weekday_calendar_starts):
-    """
-    This function lists days which are able to distribute them to fraction's owners.
-    """
-    fractional_calendar_week_indexed = fractional_day_weeker(current_year,weekday_calendar_starts)
-    week_index_list = list(fractional_calendar_week_indexed.values())
 
-    day_index_list = []
-    for i in range(len(week_index_list)):
-        week_index = week_index_list[i]
-        day_index = [week_index[0] * 7 + i % 7]
-        day_index_list.append(day_index)
-
-    return dict(zip(fractional_calendar_week_indexed.keys(),day_index_list))
-
-def fractional_index_maker(current_year, weekday_calendar_starts):
+def fractional_index_maker(current_year, weekday_calendar_starts, maintenance_path):
     """
     This function indexes each date with fraction's index.
     """
-    fractional_calendar_week_indexed = fractional_day_weeker(current_year,weekday_calendar_starts)
+    fractional_calendar_week_indexed = fractional_day_weeker(current_year,weekday_calendar_starts, maintenance_path)
     week_index_list = list(fractional_calendar_week_indexed.values())
     total_fractional_weeks_quantity = weeks_expected_per_year // fractions_quantity * fractions_quantity
 
@@ -363,12 +352,12 @@ def fractional_index_maker(current_year, weekday_calendar_starts):
 
     return dict(zip(fractional_calendar_week_indexed.keys(),fraction_index_list))
 
-def fraction_hunter(wishful_year, wishful_month, wishful_day, weekday_calendar_starts):
+def fraction_hunter(wishful_year, wishful_month, wishful_day, weekday_calendar_starts, maintenance_path):
     """
     This function searches what fraction is needed for a specific wishful date.      
     """
-    current_calendar = fractional_index_maker(wishful_year, weekday_calendar_starts)
-    next_calendar = fractional_index_maker(wishful_year + 1, weekday_calendar_starts)
+    current_calendar = fractional_index_maker(wishful_year, weekday_calendar_starts, maintenance_path)
+    next_calendar = fractional_index_maker(wishful_year + 1, weekday_calendar_starts, maintenance_path)
 
     fraction_spot = {**current_calendar, **next_calendar}
 
@@ -379,13 +368,13 @@ def fraction_hunter(wishful_year, wishful_month, wishful_day, weekday_calendar_s
     except KeyError:
         return f"So sorry, your wishful date '{wishful_date}' isn't available due our current schedule"
 
-def unfractional_dates_list(current_year, weekday_calendar_starts):
+def unfractional_dates_list(current_year, weekday_calendar_starts, maintenance_path):
     """
     This funcion has as goal crafting a list with no fractional dates, such that,
     this list must have the rest of the dates of each year.
     """
     whole_calendar = main_day_sequence(current_year, weekday_calendar_starts)
-    fractional_calendar = fractional_index_maker(current_year, weekday_calendar_starts)
+    fractional_calendar = fractional_index_maker(current_year, weekday_calendar_starts, maintenance_path)
 
     dates = list(whole_calendar.keys())
     fractional_dates = set(fractional_calendar.keys())  # We choose set instead of list for faster searching
