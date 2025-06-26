@@ -264,37 +264,38 @@ def holly_weeks(current_year, weekday_calendar_starts):
 
     return gold
 
-def maintenance_weeks_paths(current_year, weekday_calendar_starts):
-    """
-    
-    """
-    weeks_per_fraction = weeks_expected_per_year // fractions_quantity
-    reserved_weeks = weeks_expected_per_year - fractions_quantity * weeks_per_fraction
-    if extra_week_indicator(current_year,weekday_calendar_starts):
-        reserved_weeks +=1
-
-    calendar = main_day_weeker(current_year, weekday_calendar_starts)
-    gold = holly_weeks(current_year, weekday_calendar_starts)
-
-    regular = {k:v for (k,v) in calendar.items() if v not in gold}
-    list = [[i//7] for i in range(len(regular.values()))]
-    regular = dict(zip(regular.keys(),list))
-    bound = len(regular.keys()) // 7
-    max_regular_len = bound // reserved_weeks * reserved_weeks
-
-    dic = {k: v for k, v in regular.items() if v[0] < max_regular_len}
-
-    return {k:[v[0] % (max_regular_len // reserved_weeks)] for (k,v) in dic.items()}
-
 # ======== Fractions-related functions ========
 
-def maintenance_weeks_maker(current_year, weekday_calendar_starts, maintenance_path):
+def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_path):
     """
     Select week indices for maintenance based on a path and the year characteristics.
     """
     weeks_per_fraction = weeks_expected_per_year // fractions_quantity
     reserved_weeks = weeks_expected_per_year - fractions_quantity * weeks_per_fraction
-    maintenance_deserved_weeks = maintenance_weeks_paths(current_year, weekday_calendar_starts)
+    
+    def maintenance_weeks_paths(current_year, weekday_calendar_starts,reserved_weeks):
+        """
+        This function crafts a dictionarie with no hollyweeks in tis keys (datetimes),
+        and also it bounds the dictionarie particulary.
+        """
+        if extra_week_indicator(current_year,weekday_calendar_starts):
+            reserved_weeks +=1
+
+        calendar = main_day_weeker(current_year, weekday_calendar_starts)
+        gold = holly_weeks(current_year, weekday_calendar_starts)
+
+        regular = {k:v for (k,v) in calendar.items() if v not in gold}
+        list = [[i//7] for i in range(len(regular.values()))]
+        regular = dict(zip(regular.keys(),list))
+        bound = len(regular.keys()) // 7
+        max_regular_len = bound // reserved_weeks * reserved_weeks
+
+        dic = {k: v for k, v in regular.items() if v[0] < max_regular_len}
+
+        return {k:[v[0] % (max_regular_len // reserved_weeks)] for (k,v) in dic.items()}
+
+
+    maintenance_deserved_weeks = maintenance_weeks_paths(current_year, weekday_calendar_starts,reserved_weeks)
     lenght = len(maintenance_deserved_weeks.values()) // 7 // reserved_weeks
     matching_keys = [k for (k,v) in maintenance_deserved_weeks.items() if v[0] == maintenance_path % lenght]
 
@@ -317,7 +318,7 @@ def fractional_day_weeker(current_year, weekday_calendar_starts, maintenance_pat
     """
     semana_santa_index = semana_santa_weeker(current_year,weekday_calendar_starts)
     easter_index = easter_weeker(current_year,weekday_calendar_starts)
-    maintenance_weeks = maintenance_weeks_maker(current_year,weekday_calendar_starts, maintenance_path)
+    maintenance_weeks = maintenance_weeks_list(current_year,weekday_calendar_starts, maintenance_path)
     
     special_weeks = []
     special_weeks.append(semana_santa_index)
