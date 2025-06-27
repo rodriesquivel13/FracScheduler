@@ -292,7 +292,7 @@ def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_pa
 
         dic = {k: v for k, v in regular.items() if v[0] < max_regular_len}
 
-        return {k:[v[0] % (max_regular_len // reserved_weeks)] for (k,v) in dic.items()}
+        return {k:[(v[0] + (current_year % fractions_quantity)) % (max_regular_len // reserved_weeks)] for (k,v) in dic.items()}
 
 
     maintenance_deserved_weeks = maintenance_weeks_paths(current_year, weekday_calendar_starts,reserved_weeks)
