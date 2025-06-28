@@ -12,7 +12,7 @@ form {
     font-size: 20px;
 }
 
-/* Grid layout: 3 columns to display each month */
+/* Grid layout: 3 columns */
 .calendar {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -26,13 +26,32 @@ form {
     margin: 0 auto;
 }
 
+/* Centrar título de mes */
+.month h2 {
+    text-align: center;
+}
+
+/* Ghost cell para el Fraction Hunter */
+.month.ghost {
+    border: none;
+    background: none;
+    box-shadow: none;
+}
+
+.month.ghost h2 {
+    visibility: hidden;
+    height: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/* Tabla de calendario */
 table {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
 }
 
-/* Headers and cells: traditional horizontal and compact layout */
 th, td {
     text-align: center;
     padding: 2px;
@@ -45,7 +64,7 @@ th {
     font-size: 14px;
 }
 
-/* Styles for the fraction selector */
+/* Selector de fracciones */
 .fraction-selector {
     display: flex;
     flex-direction: column;
@@ -79,12 +98,11 @@ th {
     align-items: center;
 }
 
-/* Form and export buttons */
+/* Botones */
 .form-button {
     font-size: 16px;
     padding: 10px 20px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 10px auto;
     background-color: #1C85BE;
     color: white;
     border: none;
@@ -96,11 +114,17 @@ th {
     background-color: #4472C4;
 }
 
+/* PDF export */
+#pdfForm {
+    grid-column: 2 / span 2;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
 #pdfForm button {
     font-size: 16px;
     padding: 10px 20px;
-    margin-top: 10px;
-    margin-bottom: 10px;
     background-color: #1C85BE;
     color: white;
     border: none;
@@ -112,22 +136,13 @@ th {
     background-color: #4472C4;
 }
 
-/* Remove borders and background; place the block in the empty grid cell (row 5, columns 2 and 3)
-   This aligns its width with the October and November calendars */
-#pdfForm {
-    grid-column: 2 / span 2;
-    background: transparent;
-    border: none;
-    padding: 0;
-}
-
-/* Styles for non-fractional dates */
+/* Días no fraccionales */
 td.unfractional {
-    background-color: #000000;
-    color: #FFFFFF;
+    background-color: #000;
+    color: #fff;
 }
 
-/* Floating error message */
+/* Error flotante */
 .floating-error {
     position: fixed;
     top: 20px;
@@ -150,13 +165,22 @@ td.unfractional {
     100% { opacity: 0; }
 }
 
-/* Circle around the highlighted date */
+/* Círculo en días resaltados */
 .date-circle {
-  display: inline-block;
-  width: 28px;           /* adjusts to the size of your cell */
-  height: 28px;          /* same diameter as the width */
-  line-height: 28px;     /* vertically centers the number */
-  border-radius: 50%;    /* makes it a circle */
-  text-align: center;    /* centers the text */
-  vertical-align: middle;
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    border-radius: 50%;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Estilo del Fraction Hunter bajo diciembre actual */
+.fraction-hunter-footer {
+    margin-top: 10px;
+    text-align: center;
+    font-style: italic;
+    font-size: 16px;
+    font-family: 'Libre Baskerville', serif;
 }
