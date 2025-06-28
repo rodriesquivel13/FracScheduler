@@ -8,6 +8,7 @@
 </head>
 <body>
   <h1>FracScheduler</h1>
+
   {% if error_message %}
     <div id="floating-error"
          class="floating-error"
@@ -18,23 +19,12 @@
     <label for="year">Year:</label>
     <input type="number" id="year" name="year" value="{{ year }}" class="form-button">
     
-    <!-- Se elimina el selector de Level y se agrega el de Apartament -->
     <label for="apartament">Apartament:</label>
     <select id="apartament" name="apartament" class="form-button">
       {% for a in available_apartaments %}
         <option value="{{ a }}" {% if apartament == a %}selected{% endif %}>{{ a }}</option>
       {% endfor %}
     </select>
-
-    <fieldset class="fraction-hunter">
-      <legend>Fraction Hunter</legend>
-      <label for="hunter_date">Enter a date:</label>
-      <input type="date" id="hunter_date" name="hunter_date" class="form-button">
-      <button type="submit"
-              formaction="/hunt_fraction"
-              formmethod="get"
-              class="form-button">Search</button>
-    </fieldset>
 
     <fieldset class="fraction-selector">
       <legend>Select fractions to paint:</legend>
@@ -47,7 +37,7 @@
                    id="fraction_{{ i }}"
                    name="fractions"
                    value="{{ i }}"
-                   {% if i in selected_fractions %}checked{% endif %}>
+                   {% if i in selected_fractions %}checked{% endif %}/>
             <label for="fraction_{{ i }}">Fraction {{ 8 if i == 0 else i }}</label>
           </div>
         {% endfor %}
@@ -56,15 +46,15 @@
                  id="fraction_unfractional"
                  name="fractions"
                  value="unfractional"
-                 {% if 'unfractional' in selected_fractions %}checked{% endif %}>
-          <label for="fraction_unfractional">Unfractional</label>
+                 {% if 'unfractional' in selected_fractions %}checked{% endif %}/>
+          <label for="fraction_unfractional">Unfractioned Weeks</label>
         </div>
         <div class="fraction-item">
           <input type="checkbox"
                  id="fraction_all"
                  name="fractions"
                  value="all"
-                 {% if 'all' in selected_fractions %}checked{% endif %}>
+                 {% if 'all' in selected_fractions %}checked{% endif %}/>
           <label for="fraction_all">All</label>
         </div>
         <div class="fraction-item">
@@ -72,7 +62,7 @@
                  id="fraction_none"
                  name="fractions"
                  value="none"
-                 onclick="deselectAll()">
+                 onclick="deselectAll()"/>
           <label for="fraction_none">None</label>
         </div>
       </div>
@@ -89,9 +79,7 @@
         <table>
           <thead>
             <tr>
-              {% for d in day_names %}
-                <th>{{ d }}</th>
-              {% endfor %}
+              {% for d in day_names %}<th>{{ d }}</th>{% endfor %}
             </tr>
           </thead>
           <tbody>
@@ -100,6 +88,7 @@
                 {% for day in week %}
                   <td class="{{ 'empty' if day == 0 else '' }}">
                     {% if day != 0 %}
+                      {# lógica idéntica a la del año actual #}
                       {% set date = datetime(year-1, 12, day) %}
                       {% set frac_c = fractional_indices.get(date) %}
                       {% set frac_p = fractional_indices_prev.get(date) %}
@@ -117,14 +106,12 @@
                                      or (date in unfractional_dates_prev)
                                      or (date in unfractional_dates_next) %}
                       {% set paint_fraction = fraction and (fraction[0] in selected_fractions or 'all' in selected_fractions) %}
-
                       {% if 'unfractional' in selected_fractions and is_unf %}
-                        <div class="date-circle" style="background-color:#000000; color:#FFFFFF;">
-                          {{ day }}
-                        </div>
+                        <div class="date-circle" style="background-color:#000;color:#fff;">{{ day }}</div>
                       {% elif paint_fraction %}
-                        <div class="date-circle" style="background-color:{{ fraction_colors[fraction[0]] }};
-                             color:{% if fraction[0] in [0,2,4,6] %}#FFFFFF{% else %}#000000{% endif %};">
+                        <div class="date-circle"
+                             style="background-color:{{ fraction_colors[fraction[0]] }};
+                                    color:{% if fraction[0] in [0,2,4,6] %}#fff{% else %}#000{% endif %};">
                           {{ day }}
                         </div>
                       {% else %}
@@ -147,9 +134,7 @@
         <table>
           <thead>
             <tr>
-              {% for d in day_names %}
-                <th>{{ d }}</th>
-              {% endfor %}
+              {% for d in day_names %}<th>{{ d }}</th>{% endfor %}
             </tr>
           </thead>
           <tbody>
@@ -175,14 +160,12 @@
                                      or (date in unfractional_dates_prev)
                                      or (date in unfractional_dates_next) %}
                       {% set paint_fraction = fraction and (fraction[0] in selected_fractions or 'all' in selected_fractions) %}
-
                       {% if 'unfractional' in selected_fractions and is_unf %}
-                        <div class="date-circle" style="background-color:#000000; color:#FFFFFF;">
-                          {{ day }}
-                        </div>
+                        <div class="date-circle" style="background-color:#000;color:#fff;">{{ day }}</div>
                       {% elif paint_fraction %}
-                        <div class="date-circle" style="background-color:{{ fraction_colors[fraction[0]] }};
-                             color:{% if fraction[0] in [0,2,4,6] %}#FFFFFF{% else %}#000000{% endif %};">
+                        <div class="date-circle"
+                             style="background-color:{{ fraction_colors[fraction[0]] }};
+                                    color:{% if fraction[0] in [0,2,4,6] %}#fff{% else %}#000{% endif %};">
                           {{ day }}
                         </div>
                       {% else %}
@@ -197,6 +180,18 @@
         </table>
       </div>
     {% endfor %}
+
+    {# — Ghost cell en lugar de enero próximo — #}
+    <div class="month ghost">
+      <h2>&nbsp;</h2>
+      <div class="fraction-hunter-footer">
+        <p>Looking for some wishful date? Try with:</p>
+        <form method="get" action="/hunt_fraction">
+          <input type="date" id="hunter_date" name="hunter_date" class="form-button">
+          <button type="submit" class="form-button">Fraction Hunter</button>
+        </form>
+      </div>
+    </div>
   </div>
 
   <script src="{{ url_for('static', filename='scripts.js') }}"></script>
