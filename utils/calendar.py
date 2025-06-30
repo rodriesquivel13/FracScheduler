@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 from . import dates
 #============= Global Variables =====================
-fractions_quantity = 8
 weeks_expected_per_year = 365//7
 
 # ======== Date-related functions ========
