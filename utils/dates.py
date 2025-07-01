@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 
-# ======== Dates Numerical Calculations ========
 def gauss_easter(year):
     """
     Gauss' model for calculating the date of easter's beginning
@@ -21,6 +20,7 @@ def gauss_easter(year):
     easter_day = ((h + l - 7 * m + 114) % 31) + 1
     return datetime(year,easter_month,easter_day)
 
+# ========== Regular Deterministic hollydays
 def sabado_santo(year): 
     """
     Function for calculating Sabado santo (Samana Santa's Saturday)
@@ -45,6 +45,7 @@ def christmas(current_year):
     """
     return datetime(current_year,12,25)
 
+# ============= Irregular Deterministic hollydays
 def constitution_day(current_year):
     """
     First Monday of each February. It ever be a "puente"
@@ -73,7 +74,7 @@ def mexican_revolution_day(current_year):
     """
     Since 2006 mexican government decreed day of the revolution will celebrated on third monday of november in each year.
      So, this function calculates when is that particular monday.
-        """
+    """
     count = 0
     for day in range(1, 31):  # november has 30 days
         date = datetime(current_year, 11, day)
@@ -82,6 +83,32 @@ def mexican_revolution_day(current_year):
             if count == 3:
                 return date
             
+def father_day(current_year):
+    """
+    Third Sunday of each june.
+    """
+    count = 0
+    for day in range(1, 31):  # june has 30 days
+        date = datetime(current_year, 6, day)
+        if date.weekday() == 6:  # sunday is equal to 6
+            count += 1
+            if count == 3:
+                return date
+            
+def thanksgiving(current_year):
+    """
+    Fourth thursday of each november
+    """
+    count = 0
+    for day in range(1, 31):  # november has 30 days
+        date = datetime(current_year, 11, day)
+        if date.weekday() == 3:  # monday is equal to 0
+            count += 1
+            if count == 4:
+                return date
+            
+# ========= No deterministic hollydays
+
 def valentines_day(current_year):
     """
     Valentine's Day calculation
@@ -107,9 +134,7 @@ def independence_day(current_year):
     date = datetime(current_year,9,16)
     return date
 
-
-
 # ======== Test Block ========
 
 if __name__ == "__main__":
-    print(f'ff')
+    print(thanksgiving(2027))

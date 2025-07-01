@@ -1,10 +1,81 @@
 from datetime import datetime, timedelta
 from . import calendar as cd
+from . import dates
 #============= Global Variables =====================
 fractions_quantity = 8
 weeks_expected_per_year = 365//7
 
 # ======== Fractions-related functions ========
+def holly_weeks(current_year, weekday_calendar_starts):
+    """
+    Some weeks have special dates which no one want to miss them. 
+    Those dates could be deterministic or probabilistic.
+    """
+
+    def deterministic_holly_weeks(current_year,weekday_calendar_starts):
+        """
+        Deterministic hollydays are those which have an specific rule to determinate them,
+        for example mexican revolution day is third monday of each november, so this funcion return us 
+        the list of those weeks which have these hollydays.
+        """
+        newyear = dates.new_year(current_year)
+        constitution = dates.constitution_day(current_year)
+        benito = dates.benito_juarez_birthday(current_year)
+        revolution = dates.mexican_revolution_day(current_year)
+        easter = dates.easter_saturday(current_year)
+        semana_santa = dates.sabado_santo(current_year)
+        christ = dates.christmas(current_year)
+        dad = dates.father_day(current_year)
+
+        special_dates = [newyear,constitution,benito,revolution,easter,semana_santa,christ,dad]
+        calendar = cd.main_day_weeker(current_year, weekday_calendar_starts)
+        week_index = []
+
+        for i in special_dates:
+            week = calendar[i]
+            week_index.append(week)
+
+        return week_index
+
+    def probabilistic_holly_weeks(current_year,weekday_calendar_starts):
+        """
+        Others dates don't let us get sure about whether the week which contains the date will the week when the date will celebrated.
+        For example, figure out independence day takes on tuesday and owr fractional week begins also in tusday but people wants to celecrate in previous momday.
+        It's worth to say, according the earlier case, if we take the weeks which have these dates and we take the previous week, we cover all the cases.
+        So, you can intuit what this function does.
+        """
+    
+        valentines = dates.valentines_day(current_year)
+        mom = dates.mothers_day(current_year)
+        work = dates.work_day(current_year)
+        independence = dates.independence_day(current_year)
+
+        special_dates = [valentines,mom,work,independence]
+        calendar = cd.main_day_weeker(current_year, weekday_calendar_starts)
+        week_index = []
+
+        for i in special_dates:
+            week = calendar[i]
+            week_index.append(week)
+        
+        before_week_index = []
+        for k in week_index:
+            before_week_index.append([k[0] - 1])
+
+        return week_index + before_week_index
+
+    regular = deterministic_holly_weeks(current_year, weekday_calendar_starts)
+    irregular = probabilistic_holly_weeks(current_year, weekday_calendar_starts)
+
+    gold = []                       # This block is looking for clean the list up.
+    for i in regular + irregular:
+        if i not in gold:
+            gold.append(i)
+    gold_num = [k[0] for k in gold]
+    gold_num.sort()
+    gold = [[k] for k in gold_num]
+
+    return gold
 
 def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_path):
     """
@@ -22,7 +93,7 @@ def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_pa
             reserved_weeks +=1
 
         calendar = cd.main_day_weeker(current_year, weekday_calendar_starts)
-        gold = cd.holly_weeks(current_year, weekday_calendar_starts)
+        gold = holly_weeks(current_year, weekday_calendar_starts)
 
         regular = {k:v for (k,v) in calendar.items() if v not in gold}
         list = [[i//7] for i in range(len(regular.values()))]
@@ -129,3 +200,9 @@ def unfractional_dates_list(current_year, weekday_calendar_starts, maintenance_p
     fractional_dates = set(fractional_calendar.keys())  # We choose set instead of list for faster searching
 
     return [i for i in dates if i not in fractional_dates]
+
+
+# ======== Test Block ========
+
+if __name__ == "__main__":
+    print(f'ff')
