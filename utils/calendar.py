@@ -86,3 +86,12 @@ def easter_weeker(year, weekday_calendar_starts):
     saturday = dates.easter_saturday(year)
     calendar = main_day_weeker(year,weekday_calendar_starts)
     return calendar[saturday]
+
+def thanksgiving_weeker(year, weekday_calendar_starts):
+    """
+    This functions return us the week index of thanksgiving each year,
+    depending on which weekday it starts on.
+    """
+    date = dates.thanksgiving(year)
+    calendar = main_day_weeker(year,weekday_calendar_starts)
+    return calendar[date]
