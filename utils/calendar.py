@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from . import dates
-
+type = "regular"
 #============= Global Variables =====================
 weeks_expected_per_year = 365//7
 
@@ -12,9 +12,13 @@ def first_day_first_week(year, weekday_calendar_starts):
     January first belongs to the first week of each year.
     This function caculates the date of the first day of the first week of each year and calendar, depending on which weekday it starts on.  
     """
-    january_first = datetime(year,1,1)
-    shift = (january_first.weekday() - weekday_calendar_starts) % 7   
-    return january_first - timedelta(days = shift)
+    if type == "regular":
+        day = datetime(year,1,1)
+    else:
+        day = datetime(year,9,22)
+
+    shift = (day.weekday() - weekday_calendar_starts) % 7   
+    return day - timedelta(days = shift)
 
 def main_day_sequence(year, weekday_calendar_starts):
     """
