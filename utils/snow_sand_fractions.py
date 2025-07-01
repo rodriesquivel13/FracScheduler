@@ -170,7 +170,7 @@ def maintenance_weeks_list_ss(current_year, weekday_calendar_starts, maintenance
         
     return maintenance_weeks
     
-def fractional_day_weeker(current_year, weekday_calendar_starts, maintenance_path):
+def fractional_day_weeker_ss(current_year, weekday_calendar_starts, maintenance_path):
     """
     This function lists weeks which are able to distribute their to fraction's owners.
     """
@@ -203,11 +203,11 @@ def fractional_day_weeker(current_year, weekday_calendar_starts, maintenance_pat
     
     return week_fractional_indexes
 
-def fractional_index_maker(current_year, weekday_calendar_starts, maintenance_path):
+def fractional_index_maker_ss(current_year, weekday_calendar_starts, maintenance_path):
     """
     This function indexes each date with fraction's index.
     """
-    fractional_calendar_week_indexed = fractional_day_weeker(current_year,weekday_calendar_starts, maintenance_path)
+    fractional_calendar_week_indexed = fractional_day_weeker_ss(current_year,weekday_calendar_starts, maintenance_path)
     week_index_list = list(fractional_calendar_week_indexed.values())
     total_fractional_weeks_quantity = weeks_expected_per_year // fractions_quantity * fractions_quantity
 
@@ -219,12 +219,12 @@ def fractional_index_maker(current_year, weekday_calendar_starts, maintenance_pa
 
     return dict(zip(fractional_calendar_week_indexed.keys(),fraction_index_list))
 
-def fraction_hunter(wishful_year, wishful_month, wishful_day, weekday_calendar_starts, maintenance_path):
+def fraction_hunter_ss(wishful_year, wishful_month, wishful_day, weekday_calendar_starts, maintenance_path):
     """
     This function searches what fraction is needed for a specific wishful date.      
     """
-    current_calendar = fractional_index_maker(wishful_year, weekday_calendar_starts, maintenance_path)
-    next_calendar = fractional_index_maker(wishful_year + 1, weekday_calendar_starts, maintenance_path)
+    current_calendar = fractional_index_maker_ss(wishful_year, weekday_calendar_starts, maintenance_path)
+    next_calendar = fractional_index_maker_ss(wishful_year + 1, weekday_calendar_starts, maintenance_path)
 
     fraction_spot = {**current_calendar, **next_calendar}
 
@@ -235,13 +235,13 @@ def fraction_hunter(wishful_year, wishful_month, wishful_day, weekday_calendar_s
     except KeyError:
         return f"So sorry, your wishful date '{wishful_date}' isn't available due our current schedule"
 
-def unfractional_dates_list(current_year, weekday_calendar_starts, maintenance_path):
+def unfractional_dates_list_ss(current_year, weekday_calendar_starts, maintenance_path):
     """
     This funcion has as goal crafting a list with no fractional dates, such that,
     this list must have the rest of the dates of each year.
     """
     whole_calendar = main_day_sequence_ss(current_year, weekday_calendar_starts)
-    fractional_calendar = fractional_index_maker(current_year, weekday_calendar_starts, maintenance_path)
+    fractional_calendar = fractional_index_maker_ss(current_year, weekday_calendar_starts, maintenance_path)
 
     dates = list(whole_calendar.keys())
     fractional_dates = set(fractional_calendar.keys())  # We choose set instead of list for faster searching
