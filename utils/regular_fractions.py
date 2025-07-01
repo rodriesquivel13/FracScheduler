@@ -1,9 +1,92 @@
 from datetime import datetime, timedelta
-from . import calendar as cd
 from . import dates
+
 #============= Global Variables =====================
 fractions_quantity = 8
 weeks_expected_per_year = 365//7
+
+# ======== Date-related functions ========
+def first_day_first_week(year, weekday_calendar_starts): 
+    """
+    We'll use a calendar that lists its weeks.
+    Every week in this calendar begins in monday, tuesday, wednesday,... (or 0,1,2,... according python index)
+    January first belongs to the first week of each year.
+    This function caculates the date of the first day of the first week of each year and calendar, depending on which weekday it starts on.  
+    """
+    january_first = datetime(year,1,1)
+    shift = (january_first.weekday() - weekday_calendar_starts) % 7   
+    return january_first - timedelta(days = shift)
+
+def main_day_sequence(year, weekday_calendar_starts):
+    """
+    This function crafts a dictionarie:
+    -Keys are dates.
+    -Values are lists, which each one has an unique natural number starting from 0.
+    """
+    dic = {}
+    day = first_day_first_week(year, weekday_calendar_starts)
+    edge_day = first_day_first_week(year + 1, weekday_calendar_starts)
+    
+    for i in range(0,(edge_day - day).days):
+        dic[day] = [i]
+        day += timedelta(days = 1)
+    return dic
+
+def main_day_weeker(year,weekday_calendar_starts):
+    """
+    This function takes a day index (or value) from main_day_sequence and become it in week index starting from 0.
+    """
+    dic = main_day_sequence(year,weekday_calendar_starts)
+    for day_index in dic.values():
+        week_index = (day_index[0] // 7)
+        day_index[0] = week_index
+    return dic
+
+def new_weekday(year,weekday_calendar_starts):
+    """
+    This funtion re-define weekday number, depending on which day calendar starts on.
+    """
+    dic = main_day_sequence(year,weekday_calendar_starts)
+    for day_index in dic.values():
+        week_index = (day_index[0] % 7)
+        day_index[0] = week_index
+    return dic
+
+def extra_week_indicator(year,weekday_calendar_starts):
+    """
+    We expect years have 52 weeks but actually,
+    by how we defined the first day of each year,
+    some years have a 53rd week.
+    This function tell us whether a year have that extra week.
+    """
+    dic = main_day_weeker(year, weekday_calendar_starts)
+    week_list=  []
+    for week_index in dic.values():
+        if week_index[0] not in week_list:
+            week_list.append(week_index[0])
+        pass
+    count_weeks = len(week_list)
+    if count_weeks > weeks_expected_per_year:
+        return True
+    return False
+
+def semana_santa_weeker(year, weekday_calendar_starts):
+    """
+    This functions return us the week index of semana semana each year, 
+    depending on which weekday it starts on.
+    """
+    saturday = dates.sabado_santo(year)
+    calendar = main_day_weeker(year,weekday_calendar_starts)
+    return calendar[saturday]
+
+def easter_weeker(year, weekday_calendar_starts):
+    """
+    This functions return us the week index of easter each year,
+    depending on which weekday it starts on.
+    """
+    saturday = dates.easter_saturday(year)
+    calendar = main_day_weeker(year,weekday_calendar_starts)
+    return calendar[saturday]
 
 # ======== Fractions-related functions ========
 def holly_weeks(current_year, weekday_calendar_starts):
@@ -28,7 +111,7 @@ def holly_weeks(current_year, weekday_calendar_starts):
         dad = dates.father_day(current_year)
 
         special_dates = [newyear,constitution,benito,revolution,easter,semana_santa,christ,dad]
-        calendar = cd.main_day_weeker(current_year, weekday_calendar_starts)
+        calendar = main_day_weeker(current_year, weekday_calendar_starts)
         week_index = []
 
         for i in special_dates:
@@ -51,7 +134,7 @@ def holly_weeks(current_year, weekday_calendar_starts):
         independence = dates.independence_day(current_year)
 
         special_dates = [valentines,mom,work,independence]
-        calendar = cd.main_day_weeker(current_year, weekday_calendar_starts)
+        calendar = main_day_weeker(current_year, weekday_calendar_starts)
         week_index = []
 
         for i in special_dates:
@@ -89,10 +172,10 @@ def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_pa
         This function crafts a dictionarie with no hollyweeks in tis keys (datetimes),
         and also it bounds the dictionarie particulary.
         """
-        if cd.extra_week_indicator(current_year,weekday_calendar_starts):
+        if extra_week_indicator(current_year,weekday_calendar_starts):
             reserved_weeks +=1
 
-        calendar = cd.main_day_weeker(current_year, weekday_calendar_starts)
+        calendar = main_day_weeker(current_year, weekday_calendar_starts)
         gold = holly_weeks(current_year, weekday_calendar_starts)
 
         regular = {k:v for (k,v) in calendar.items() if v not in gold}
@@ -110,7 +193,7 @@ def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_pa
     lenght = len(maintenance_deserved_weeks.values()) // 7 // reserved_weeks
     matching_keys = [k for (k,v) in maintenance_deserved_weeks.items() if v[0] == maintenance_path % lenght]
 
-    calendar = cd.main_day_weeker(current_year,weekday_calendar_starts)
+    calendar = main_day_weeker(current_year,weekday_calendar_starts)
 
     dirty_list = []
     for i in matching_keys:
@@ -127,15 +210,15 @@ def fractional_day_weeker(current_year, weekday_calendar_starts, maintenance_pat
     """
     This function lists weeks which are able to distribute their to fraction's owners.
     """
-    semana_santa_index = cd.semana_santa_weeker(current_year,weekday_calendar_starts)
-    easter_index = cd.easter_weeker(current_year,weekday_calendar_starts)
+    semana_santa_index = semana_santa_weeker(current_year,weekday_calendar_starts)
+    easter_index = easter_weeker(current_year,weekday_calendar_starts)
     maintenance_weeks = maintenance_weeks_list(current_year,weekday_calendar_starts, maintenance_path)
     
     special_weeks = []
     special_weeks.append(semana_santa_index)
     special_weeks.append(easter_index)
 
-    day_week_indexes_dic = cd.main_day_weeker(current_year,weekday_calendar_starts)  
+    day_week_indexes_dic = main_day_weeker(current_year,weekday_calendar_starts)  
     week_indexes_after_maintenance = {k: v for k,v in day_week_indexes_dic.items() if v not in maintenance_weeks}
     unspecial_week_indexes = {k: v for k,v in week_indexes_after_maintenance.items() if v not in special_weeks}
 
@@ -193,7 +276,7 @@ def unfractional_dates_list(current_year, weekday_calendar_starts, maintenance_p
     This funcion has as goal crafting a list with no fractional dates, such that,
     this list must have the rest of the dates of each year.
     """
-    whole_calendar = cd.main_day_sequence(current_year, weekday_calendar_starts)
+    whole_calendar = main_day_sequence(current_year, weekday_calendar_starts)
     fractional_calendar = fractional_index_maker(current_year, weekday_calendar_starts, maintenance_path)
 
     dates = list(whole_calendar.keys())
