@@ -116,5 +116,3 @@ apartament_type = {
     1006: "regular",
     1007: "regular",
 }
-
-"""perro perro gato """
