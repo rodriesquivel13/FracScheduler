@@ -101,19 +101,32 @@ def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_pa
         """
         if cd.extra_week_indicator(current_year,weekday_calendar_starts):
             reserved_weeks +=1
-
         calendar = cd.main_day_weeker(current_year, weekday_calendar_starts)
         gold = holly_weeks(current_year, weekday_calendar_starts)
 
-        regular = {k:v for (k,v) in calendar.items() if v not in gold}
-        list = [[i//7] for i in range(len(regular.values()))]
-        regular = dict(zip(regular.keys(),list))
-        bound = len(regular.keys()) // 7
-        max_regular_len = bound // reserved_weeks * reserved_weeks
+        if type == "regular":
+            regular = {k:v for (k,v) in calendar.items() if v not in gold}
+            list = [[i//7] for i in range(len(regular.values()))]
+            regular = dict(zip(regular.keys(),list))
+            bound = len(regular.keys()) // 7
+            max_regular_len = bound // reserved_weeks * reserved_weeks
 
-        dic = {k: v for k, v in regular.items() if v[0] < max_regular_len}
+            dic = {k: v for k, v in regular.items() if v[0] < max_regular_len}
 
-        return {k:[(v[0] + (current_year % fractions_quantity)) % (max_regular_len // reserved_weeks)] for (k,v) in dic.items()}
+            return {k:[(v[0] + (current_year % fractions_quantity)) % (max_regular_len // reserved_weeks)] for (k,v) in dic.items()}
+        else:
+            def maintenance_winter_path(current_year, weekday_calendar_starts, reserved_weeks):
+                snow_dic = {k:v for (k,v) in calendar.items() if v[0] < weeks_expected_per_year // 2}
+                return snow_dic
+            
+            def maintenace_summer_path(current_year, weekday_calendar_starts, reserved_weeks):    
+                sand_dic = {k:v for (k,v) in calendar.items() if v[0] >= weeks_expected_per_year // 2}
+                return sand_dic
+
+            
+
+
+
 
 
     maintenance_deserved_weeks = maintenance_weeks_paths(current_year, weekday_calendar_starts,reserved_weeks)
