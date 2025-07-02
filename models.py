@@ -72,3 +72,5 @@ apartament_weekday_calendar_starts = {
     1006: 3,
     1007: 3,
 }
+
+"""perro perro gato"""
