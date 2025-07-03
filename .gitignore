@@ -10,3 +10,8 @@ __pycache__/
 
 # Entorno vitual
 venv/
+
+
+carpetas
+utils/__pycache__/
+Analysis/de421.bsp
