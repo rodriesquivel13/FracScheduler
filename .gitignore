@@ -9,7 +9,7 @@
 # Editor config
 .vscode/
 
-# Entorno vitual
+# Entorno virtual
 venv/
 
 
