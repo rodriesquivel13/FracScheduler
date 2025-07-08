@@ -88,20 +88,11 @@
                 {% for day in week %}
                   <td class="{{ 'empty' if day == 0 else '' }}">
                     {% if day != 0 %}
-                      {# lógica idéntica a la del año actual #}
                       {% set date = datetime(year-1, 12, day) %}
                       {% set frac_c = fractional_indices.get(date) %}
                       {% set frac_p = fractional_indices_prev.get(date) %}
                       {% set frac_n = fractional_indices_next.get(date) %}
-                      {% if frac_c %}
-                        {% set fraction = frac_c %}
-                      {% elif frac_p %}
-                        {% set fraction = frac_p %}
-                      {% elif frac_n %}
-                        {% set fraction = frac_n %}
-                      {% else %}
-                        {% set fraction = None %}
-                      {% endif %}
+                      {% set fraction = frac_c or frac_p or frac_n %}
                       {% set is_unf = (date in unfractional_dates)
                                      or (date in unfractional_dates_prev)
                                      or (date in unfractional_dates_next) %}
@@ -147,15 +138,7 @@
                       {% set frac_c = fractional_indices.get(date) %}
                       {% set frac_p = fractional_indices_prev.get(date) %}
                       {% set frac_n = fractional_indices_next.get(date) %}
-                      {% if frac_c %}
-                        {% set fraction = frac_c %}
-                      {% elif frac_p %}
-                        {% set fraction = frac_p %}
-                      {% elif frac_n %}
-                        {% set fraction = frac_n %}
-                      {% else %}
-                        {% set fraction = None %}
-                      {% endif %}
+                      {% set fraction = frac_c or frac_p or frac_n %}
                       {% set is_unf = (date in unfractional_dates)
                                      or (date in unfractional_dates_prev)
                                      or (date in unfractional_dates_next) %}
@@ -187,6 +170,11 @@
       <div class="fraction-hunter-footer">
         <p>Looking for some wishful date? Try with:</p>
         <form method="get" action="/hunt_fraction">
+          <input type="hidden" name="apartament" value="{{ apartament }}">
+          <input type="hidden" name="year"      value="{{ year }}">
+          {% for f in selected_fractions %}
+            <input type="hidden" name="fractions" value="{{ f }}">
+          {% endfor %}
           <input type="date" id="hunter_date" name="hunter_date" class="form-button">
           <button type="submit" class="form-button">Fraction Hunter</button>
         </form>
