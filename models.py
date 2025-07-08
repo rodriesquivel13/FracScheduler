@@ -1,3 +1,5 @@
+import pandas as pd
+
 apartament_maintenance_path = {
     104: 0,
     105: 1,
