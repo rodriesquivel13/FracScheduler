@@ -1,16 +1,18 @@
 from datetime import datetime, timedelta
-from . import dates
+from . import hollydays
 from . import calendar as cd
+from . import parameters
+
 type = "regular"
 #============= Global Variables =====================
-fractions_quantity = 8
-weeks_expected_per_year = 365//7
+fractions_quantity = parameters.number_of_fractions()
+weeks_expected_per_year = parameters.weeks_expected_per_year()
 
 # ======== Fractions-related functions ========
 def holly_weeks(current_year, weekday_calendar_starts):
     """
-    Some weeks have special dates which no one want to miss them. 
-    Those dates could be deterministic or probabilistic.
+    Some weeks have special hollydays which no one want to miss them. 
+    Those hollydays could be deterministic or probabilistic.
     """
 
     def deterministic_holly_weeks(current_year,weekday_calendar_starts):
@@ -20,19 +22,19 @@ def holly_weeks(current_year, weekday_calendar_starts):
         the list of those weeks which have these hollydays.
         """
         if type == "regular":
-            newyear = dates.new_year(current_year)
-            constitution = dates.constitution_day(current_year)
-            benito = dates.benito_juarez_birthday(current_year)
-            revolution = dates.mexican_revolution_day(current_year)
-            easter = dates.easter_saturday(current_year)
-            semana_santa = dates.sabado_santo(current_year)
-            christ = dates.christmas(current_year)
-            dad = dates.father_day(current_year)
+            newyear = hollydays.new_year(current_year)
+            constitution = hollydays.constitution_day(current_year)
+            benito = hollydays.benito_juarez_birthday(current_year)
+            revolution = hollydays.mexican_revolution_day(current_year)
+            easter = hollydays.easter_saturday(current_year)
+            semana_santa = hollydays.sabado_santo(current_year)
+            christ = hollydays.christmas(current_year)
+            dad = hollydays.father_day(current_year)
 
             special_dates = [newyear,constitution,benito,revolution,easter,semana_santa,christ,dad]
         else:
-            semana_santa = dates.sabado_santo(current_year)
-            thanks = dates.thanksgiving(current_year)
+            semana_santa = hollydays.sabado_santo(current_year)
+            thanks = hollydays.thanksgiving(current_year)
             special_dates = [semana_santa,thanks]
 
         calendar = cd.main_day_weeker(current_year, weekday_calendar_starts)
@@ -46,16 +48,16 @@ def holly_weeks(current_year, weekday_calendar_starts):
 
     def probabilistic_holly_weeks(current_year,weekday_calendar_starts):
         """
-        Others dates don't let us get sure about whether the week which contains the date will the week when the date will celebrated.
+        Others hollydays don't let us get sure about whether the week which contains the date will the week when the date will celebrated.
         For example, figure out independence day takes on tuesday and owr fractional week begins also in tusday but people wants to celecrate in previous momday.
-        It's worth to say, according the earlier case, if we take the weeks which have these dates and we take the previous week, we cover all the cases.
+        It's worth to say, according the earlier case, if we take the weeks which have these hollydays and we take the previous week, we cover all the cases.
         So, you can intuit what this function does.
         """
         if type == "regular":
-            valentines = dates.valentines_day(current_year)
-            mom = dates.mothers_day(current_year)
-            work = dates.work_day(current_year)
-            independence = dates.independence_day(current_year)
+            valentines = hollydays.valentines_day(current_year)
+            mom = hollydays.mothers_day(current_year)
+            work = hollydays.work_day(current_year)
+            independence = hollydays.independence_day(current_year)
 
             special_dates = [valentines,mom,work,independence]
         else:
@@ -213,16 +215,16 @@ def fraction_hunter(wishful_year, wishful_month, wishful_day, weekday_calendar_s
 
 def unfractional_dates_list(current_year, weekday_calendar_starts, maintenance_path):
     """
-    This funcion has as goal crafting a list with no fractional dates, such that,
-    this list must have the rest of the dates of each year.
+    This funcion has as goal crafting a list with no fractional hollydays, such that,
+    this list must have the rest of the hollydays of each year.
     """
     whole_calendar = cd.main_day_sequence(current_year, weekday_calendar_starts)
     fractional_calendar = fractional_index_maker(current_year, weekday_calendar_starts, maintenance_path)
 
-    dates = list(whole_calendar.keys())
+    hollydays = list(whole_calendar.keys())
     fractional_dates = set(fractional_calendar.keys())  # We choose set instead of list for faster searching
 
-    return [i for i in dates if i not in fractional_dates]
+    return [i for i in hollydays if i not in fractional_dates]
 
 
 # ======== Test Block ========

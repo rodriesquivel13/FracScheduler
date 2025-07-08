@@ -1,9 +1,7 @@
-from datetime import datetime, timedelta
-from . import dates
+from datetime import timedelta
+from . import hollydays
+from . import parameters
 type = "regular"
-#============= Global Variables =====================
-weeks_expected_per_year = 365//7
-
  # ======== Date-related functions ========
 def first_day_first_week(year, weekday_calendar_starts): 
     """
@@ -13,9 +11,9 @@ def first_day_first_week(year, weekday_calendar_starts):
     This function caculates the date of the first day of the first week of each year and calendar, depending on which weekday it starts on.  
     """
     if type == "regular":
-        day = datetime(year,1,1)
+        day = parameters.first_day_regular(year)
     else:
-        day = datetime(year,9,22)
+        day = parameters.first_day_snow(year)
 
     shift = (day.weekday() - weekday_calendar_starts) % 7   
     return day - timedelta(days = shift)
@@ -69,6 +67,7 @@ def extra_week_indicator(year,weekday_calendar_starts):
             week_list.append(week_index[0])
         pass
     count_weeks = len(week_list)
+    weeks_expected_per_year = parameters.weeks_expected_per_year()
     if count_weeks > weeks_expected_per_year:
         return True
     return False
@@ -78,7 +77,7 @@ def semana_santa_weeker(year, weekday_calendar_starts):
     This functions return us the week index of semana semana each year, 
     depending on which weekday it starts on.
     """
-    saturday = dates.sabado_santo(year)
+    saturday = hollydays.sabado_santo(year)
     calendar = main_day_weeker(year,weekday_calendar_starts)
     return calendar[saturday]
 
@@ -87,7 +86,7 @@ def easter_weeker(year, weekday_calendar_starts):
     This functions return us the week index of easter each year,
     depending on which weekday it starts on.
     """
-    saturday = dates.easter_saturday(year)
+    saturday = hollydays.easter_saturday(year)
     calendar = main_day_weeker(year,weekday_calendar_starts)
     return calendar[saturday]
 
@@ -96,6 +95,6 @@ def thanksgiving_weeker(year, weekday_calendar_starts):
     This functions return us the week index of thanksgiving each year,
     depending on which weekday it starts on.
     """
-    date = dates.thanksgiving(year)
+    date = hollydays.thanksgiving(year)
     calendar = main_day_weeker(year,weekday_calendar_starts)
     return calendar[date]
