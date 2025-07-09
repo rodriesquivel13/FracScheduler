@@ -60,8 +60,14 @@ def index():
         day_names=day_names,
         calendar=calendar,
         fraction_colors=[
-            "#CC00CC", "#ADD8E6", "#4472C4", "#B3DE99",
-            "#C00000", "#DDA0DD", "#00B050", "#FFE5B4"
+            "#CC00CC",  # 0
+            "#ADD8E6",  # 1
+            "#4472C4",  # 2
+            "#FF7514",  # 3
+            "#C00000",  # 4
+            "#CCA9DD",  # 5
+            "#00B050",  # 6
+            "#FFE5B4"   # 7
         ],
         datetime=datetime,
         fractional_indices=fractional_indices,
@@ -164,8 +170,14 @@ def hunt_fraction():
         day_names=day_names,
         calendar=calendar,
         fraction_colors=[
-            "#CC00CC", "#ADD8E6", "#4472C4", "#B3DE99",
-            "#C00000", "#DDA0DD", "#00B050", "#FFE5B4"
+            "#CC00CC",  # 0
+            "#ADD8E6",  # 1
+            "#4472C4",  # 2
+            "#FF7514",  # 3
+            "#C00000",  # 4
+            "#CCA9DD",  # 5
+            "#00B050",  # 6
+            "#FFE5B4"   # 7
         ],
         datetime=datetime,
         previous_december=previous_december,
