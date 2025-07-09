@@ -1,7 +1,8 @@
 from datetime import timedelta
 from . import hollydays
 from . import parameters
-type = "regular"
+type = parameters.type()
+
  # ======== Date-related functions ========
 def first_day_first_week(year, weekday_calendar_starts): 
     """

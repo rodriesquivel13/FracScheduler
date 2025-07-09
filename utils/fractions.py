@@ -1,9 +1,9 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from . import hollydays
 from . import calendar as cd
 from . import parameters
 
-type = "regular"
+type = parameters.type()
 #============= Global Variables =====================
 fractions_quantity = parameters.number_of_fractions()
 weeks_expected_per_year = parameters.weeks_expected_per_year()
@@ -35,7 +35,9 @@ def holly_weeks(current_year, weekday_calendar_starts):
         else:
             semana_santa = hollydays.sabado_santo(current_year)
             thanks = hollydays.thanksgiving(current_year)
-            special_dates = [semana_santa,thanks]
+            newyear = hollydays.new_year(current_year)
+            christ = hollydays.christmas(current_year)
+            special_dates = [semana_santa,thanks,newyear,christ]
 
         calendar = cd.main_day_weeker(current_year, weekday_calendar_starts)
         week_index = []
@@ -98,7 +100,7 @@ def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_pa
     
     def maintenance_weeks_paths(current_year, weekday_calendar_starts,reserved_weeks):
         """
-        This function crafts a dictionarie with no hollyweeks in tis keys (datetimes),
+        This function crafts a dictionarie with no hollyweeks in its keys (datetimes),
         and also it bounds the dictionarie particulary.
         """
         if cd.extra_week_indicator(current_year,weekday_calendar_starts):
@@ -112,20 +114,21 @@ def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_pa
             regular = dict(zip(regular.keys(),list))
             bound = len(regular.keys()) // 7
             max_regular_len = bound // reserved_weeks * reserved_weeks
-
             dic = {k: v for k, v in regular.items() if v[0] < max_regular_len}
 
             return {k:[(v[0] + (current_year % fractions_quantity)) % (max_regular_len // reserved_weeks)] for (k,v) in dic.items()}
+        
         else:
-            def maintenance_winter_path(current_year, weekday_calendar_starts, reserved_weeks):
-                snow_dic = {k:v for (k,v) in calendar.items() if v[0] < weeks_expected_per_year // 2}
-                return snow_dic
-            
-            def maintenace_summer_path(current_year, weekday_calendar_starts, reserved_weeks):    
-                sand_dic = {k:v for (k,v) in calendar.items() if v[0] >= weeks_expected_per_year // 2}
-                return sand_dic
+            full_snow_calendar = {k:v for k,v in calendar.items() if v[0] < weeks_expected_per_year // 2}
+            full_sand_calendar = {k:[v[0] - weeks_expected_per_year // 2] for k,v in calendar.items if v[0] >= weeks_expected_per_year // 2}
 
+            snow_rangeble_maintenance_weeks = {k:v for k,v in full_snow_calendar.items() if v[0] % 7 == 6}
+            sand_rangeble_maintenance_weeks = {k:v for k,v in full_sand_calendar.items if v[0] % 3 == 2}
+
+            regular_snow = {k:v for k,v in snow_rangeble_maintenance_weeks.items if v not in gold}
+            regular_sand = {k:v for k,v in sand_rangeble_maintenance_weeks.items if v not in gold}
             
+            snow_maintenance_paths = {k: [v[0]]}
 
 
 
@@ -225,6 +228,7 @@ def unfractional_dates_list(current_year, weekday_calendar_starts, maintenance_p
     fractional_dates = set(fractional_calendar.keys())  # We choose set instead of list for faster searching
 
     return [i for i in hollydays if i not in fractional_dates]
+
 
 
 # ======== Test Block ========

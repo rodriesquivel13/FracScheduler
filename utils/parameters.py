@@ -1,5 +1,8 @@
 from datetime import datetime
 # =============  GLOBAL PARAMETERS ===============================
+def type():
+    return "regular"
+
 def number_of_fractions():
     return 8
 
