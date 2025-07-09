@@ -17,8 +17,12 @@
 
   <form method="get" action="/">
     <label for="year">Year:</label>
-    <input type="number" id="year" name="year" value="{{ year }}" class="form-button">
-    
+    <select id="year" name="year" class="form-button">
+      {% for y in available_years %}
+        <option value="{{ y }}" {% if year == y %}selected{% endif %}>{{ y }}</option>
+      {% endfor %}
+    </select>
+
     <label for="apartament">Apartament:</label>
     <select id="apartament" name="apartament" class="form-button">
       {% for a in available_apartaments %}
@@ -72,7 +76,7 @@
   </form>
 
   <div class="calendar">
-    {# — Diciembre del año anterior — #}
+    {# — December of the previous year — #}
     {% if previous_december %}
       <div class="month">
         <h2>{{ calendar.month_name[12] }} {{ year - 1 }}</h2>
@@ -97,6 +101,7 @@
                                      or (date in unfractional_dates_prev)
                                      or (date in unfractional_dates_next) %}
                       {% set paint_fraction = fraction and (fraction[0] in selected_fractions or 'all' in selected_fractions) %}
+
                       {% if 'unfractional' in selected_fractions and is_unf %}
                         <div class="date-circle" style="background-color:#000;color:#fff;">{{ day }}</div>
                       {% elif paint_fraction %}
@@ -118,7 +123,7 @@
       </div>
     {% endif %}
 
-    {# — Meses del año seleccionado — #}
+    {# — Months of the selected year — #}
     {% for mi, month in months_with_index %}
       <div class="month">
         <h2>{{ calendar.month_name[mi+1] }} {{ year }}</h2>
@@ -143,6 +148,7 @@
                                      or (date in unfractional_dates_prev)
                                      or (date in unfractional_dates_next) %}
                       {% set paint_fraction = fraction and (fraction[0] in selected_fractions or 'all' in selected_fractions) %}
+
                       {% if 'unfractional' in selected_fractions and is_unf %}
                         <div class="date-circle" style="background-color:#000;color:#fff;">{{ day }}</div>
                       {% elif paint_fraction %}
@@ -164,7 +170,7 @@
       </div>
     {% endfor %}
 
-    {# — Ghost cell en lugar de enero próximo — #}
+    {# — Ghost cell instead of next January — #}
     <div class="month ghost">
       <h2>&nbsp;</h2>
       <div class="fraction-hunter-footer">

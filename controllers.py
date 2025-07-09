@@ -15,26 +15,17 @@ from models import apartament_maintenance_path, apartament_weekday_calendar_star
 
 controllers = Blueprint('controllers', __name__)
 
-# La función map_level_to_internal ya no se utiliza, pero se conserva por compatibilidad.
-def map_level_to_internal(level):
-    if level in (2, 5, 8):
-        return 1
-    elif level in (3, 6, 9):
-        return 2
-    elif level in (4, 7, 10):
-        return 3
-    else:
-        return 1  # Fallback a Tuesday
-
 @controllers.route('/')
 def index():
-    year = request.args.get('year', 2026, type=int)
-    # Se recibe el apartament en lugar de un nivel; se asigna un default (204)
+    year = request.args.get('year', datetime.now().year, type=int)
     apartament = request.args.get('apartament', 204, type=int)
     maintenance_path = apartament_maintenance_path.get(apartament, 1)
     weekday_calendar_starts = apartament_weekday_calendar_starts.get(apartament, 1)
-    
-    # Se actualizan las llamadas a las funciones de utils.py con los nuevos parámetros
+
+    # Generar rango de años para el selector (actual ± 5 años)
+    current_year = datetime.now().year
+    available_years = list(range(current_year - 5, current_year + 6))
+
     fractional_indices      = fractional_index_maker(year, weekday_calendar_starts, maintenance_path)
     fractional_indices_prev = fractional_index_maker(year - 1, weekday_calendar_starts, maintenance_path)
     fractional_indices_next = fractional_index_maker(year + 1, weekday_calendar_starts, maintenance_path)
@@ -46,7 +37,7 @@ def index():
     display_cal       = calendar.Calendar(firstweekday=0)
     months            = [display_cal.monthdayscalendar(year, m) for m in range(1, 13)]
     previous_december = display_cal.monthdayscalendar(year - 1, 12)
-    day_names = [calendar.day_abbr[i] for i in range(7)]
+    day_names         = [calendar.day_abbr[i] for i in range(7)]
 
     selected_fractions = request.args.getlist('fractions', type=str)
     if 'all' in selected_fractions:
@@ -62,21 +53,15 @@ def index():
     return render_template(
         'calendar.html',
         year=year,
+        available_years=available_years,
         months_with_index=list(enumerate(months)),
-        # Se envían al template el apartament seleccionado y la lista de apartaments disponibles
         apartament=apartament,
         available_apartaments=sorted(list(apartament_maintenance_path.keys())),
         day_names=day_names,
         calendar=calendar,
         fraction_colors=[
-            "#CC00CC",  # 0
-            "#ADD8E6",  # 1
-            "#4472C4",  # 2
-            "#B3DE99",  # 3
-            "#C00000",  # 4
-            "#DDA0DD",  # 5
-            "#00B050",  # 6
-            "#FFE5B4"   # 7
+            "#CC00CC", "#ADD8E6", "#4472C4", "#B3DE99",
+            "#C00000", "#DDA0DD", "#00B050", "#FFE5B4"
         ],
         datetime=datetime,
         fractional_indices=fractional_indices,
@@ -91,6 +76,7 @@ def index():
 
 @controllers.route('/generate_pdf')
 def generate_pdf():
+    # (sin cambios)
     start_year = request.args.get('start_year', type=int)
     end_year   = request.args.get('end_year', type=int)
     apartament = request.args.get('apartament', 204, type=int)
@@ -133,7 +119,7 @@ def hunt_fraction():
     apartament = request.args.get('apartament', 204, type=int)
     maintenance_path = apartament_maintenance_path.get(apartament, 1)
     weekday_calendar_starts = apartament_weekday_calendar_starts.get(apartament, 1)
-    
+
     if not date_str:
         return "No date provided", 400
 
@@ -152,6 +138,10 @@ def hunt_fraction():
     if isinstance(result, str):
         return result, 404
 
+    # Generar años disponibles también en hunt_fraction
+    current_year = datetime.now().year
+    available_years = list(range(current_year - 5, current_year + 6))
+
     fractional_indices      = fractional_index_maker(wishful_date.year, weekday_calendar_starts, maintenance_path)
     fractional_indices_prev = fractional_index_maker(wishful_date.year - 1, weekday_calendar_starts, maintenance_path)
     fractional_indices_next = fractional_index_maker(wishful_date.year + 1, weekday_calendar_starts, maintenance_path)
@@ -168,19 +158,14 @@ def hunt_fraction():
     return render_template(
         'calendar.html',
         year=wishful_date.year,
+        available_years=available_years,
         apartament=apartament,
         available_apartaments=sorted(list(apartament_maintenance_path.keys())),
         day_names=day_names,
         calendar=calendar,
         fraction_colors=[
-            "#CC00CC",  # 0
-            "#ADD8E6",  # 1
-            "#4472C4",  # 2
-            "#B3DE99",  # 3
-            "#C00000",  # 4
-            "#DDA0DD",  # 5
-            "#00B050",  # 6
-            "#FFE5B4"   # 7
+            "#CC00CC", "#ADD8E6", "#4472C4", "#B3DE99",
+            "#C00000", "#DDA0DD", "#00B050", "#FFE5B4"
         ],
         datetime=datetime,
         previous_december=previous_december,
