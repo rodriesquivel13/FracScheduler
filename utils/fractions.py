@@ -104,7 +104,7 @@ def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_pa
         and also it bounds the dictionarie particulary.
         """
         if cd.extra_week_indicator(current_year,weekday_calendar_starts):
-            reserved_weeks +=1
+            reserved_weeks += 1
         calendar = cd.main_day_weeker(current_year, weekday_calendar_starts)
         gold = holly_weeks(current_year, weekday_calendar_starts)
 
@@ -120,19 +120,19 @@ def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_pa
         
         else:
             full_snow_calendar = {k:v for k,v in calendar.items() if v[0] < weeks_expected_per_year // 2}
-            full_sand_calendar = {k:[v[0] - weeks_expected_per_year // 2] for k,v in calendar.items if v[0] >= weeks_expected_per_year // 2}
+            full_sand_calendar = {k:[v[0] - weeks_expected_per_year // 2] for k,v in calendar.items() if v[0] >= weeks_expected_per_year // 2}
 
-            snow_rangeble_maintenance_weeks = {k:v for k,v in full_snow_calendar.items() if v[0] % 7 == 6}
-            sand_rangeble_maintenance_weeks = {k:v for k,v in full_sand_calendar.items if v[0] % 3 == 2}
+            snow_reserved_weeks = [[18],[25]]
+            if cd.extra_week_indicator(current_year,weekday_calendar_starts):
+                sand_reserved_weeks = [[12],[19],[26]]
+            else:
+                sand_reserved_weeks = [[18],[25]]
 
-            regular_snow = {k:v for k,v in snow_rangeble_maintenance_weeks.items if v not in gold}
-            regular_sand = {k:v for k,v in sand_rangeble_maintenance_weeks.items if v not in gold}
-            
-            snow_maintenance_paths = {k: [v[0]]}
+            snow_maintenance_dic = {k:v for k,v in full_snow_calendar.items() if v in snow_reserved_weeks}
+            sand_maintenance_dic = {k:v for k,v in full_sand_calendar.items() if v in sand_reserved_weeks}
 
-
-
-
+            pre_dic = {**snow_maintenance_dic,**sand_maintenance_dic}
+            return {k:[0] for k in pre_dic.keys()}
 
     maintenance_deserved_weeks = maintenance_weeks_paths(current_year, weekday_calendar_starts,reserved_weeks)
     lenght = len(maintenance_deserved_weeks.values()) // 7 // reserved_weeks
@@ -159,30 +159,40 @@ def fractional_day_weeker(current_year, weekday_calendar_starts, maintenance_pat
     easter_index = cd.easter_weeker(current_year,weekday_calendar_starts)
     maintenance_weeks = maintenance_weeks_list(current_year,weekday_calendar_starts, maintenance_path)
     
-    special_weeks = []
-    special_weeks.append(semana_santa_index)
-    special_weeks.append(easter_index)
+    if type == "regular":
+        special_weeks = []
+        special_weeks.append(semana_santa_index)
+        special_weeks.append(easter_index)
 
-    day_week_indexes_dic = cd.main_day_weeker(current_year,weekday_calendar_starts)  
-    week_indexes_after_maintenance = {k: v for k,v in day_week_indexes_dic.items() if v not in maintenance_weeks}
-    unspecial_week_indexes = {k: v for k,v in week_indexes_after_maintenance.items() if v not in special_weeks}
+        day_week_indexes_dic = cd.main_day_weeker(current_year,weekday_calendar_starts)  
+        week_indexes_after_maintenance = {k: v for k,v in day_week_indexes_dic.items() if v not in maintenance_weeks}
+        unspecial_week_indexes = {k: v for k,v in week_indexes_after_maintenance.items() if v not in special_weeks}
 
-    recerved_fractional_week_indexes = [12,16]
-    total_fractional_weeks = weeks_expected_per_year - len(maintenance_weeks)
+        recerved_fractional_week_indexes = [12,16]
+        total_fractional_weeks = weeks_expected_per_year - len(maintenance_weeks)
 
-    reorder_list = [[a] for a in range(total_fractional_weeks + 1) if a not in recerved_fractional_week_indexes]
-    expanded_reorder_list = [a for a in reorder_list for _ in range(7)]
-    week_fractional_indexes =  dict(zip(unspecial_week_indexes.keys(),expanded_reorder_list))
+        reorder_list = [[a] for a in range(total_fractional_weeks + 1) if a not in recerved_fractional_week_indexes]
+        expanded_reorder_list = [a for a in reorder_list for _ in range(7)]
+        week_fractional_indexes =  dict(zip(unspecial_week_indexes.keys(),expanded_reorder_list))
 
-    for date in day_week_indexes_dic.keys():
-        if day_week_indexes_dic[date] == semana_santa_index:
-            week_fractional_indexes[date] = [recerved_fractional_week_indexes[0]]
-        elif day_week_indexes_dic[date] == easter_index:
-            week_fractional_indexes[date] = [recerved_fractional_week_indexes[1]]
-        else:
-            pass
+        for date in day_week_indexes_dic.keys():
+            if day_week_indexes_dic[date] == semana_santa_index:
+                week_fractional_indexes[date] = [recerved_fractional_week_indexes[0]]
+            elif day_week_indexes_dic[date] == easter_index:
+                week_fractional_indexes[date] = [recerved_fractional_week_indexes[1]]
+            else:
+                pass
+        
+        return week_fractional_indexes
     
-    return week_fractional_indexes
+    else: 
+        day_week_indexes_dic = cd.main_day_weeker(current_year,weekday_calendar_starts)
+
+        full_snow_calendar = {k:v for k,v in day_week_indexes_dic.items() if v[0] < weeks_expected_per_year // 2}
+        full_sand_calendar = {k:[v[0] - weeks_expected_per_year // 2] for k,v in day_week_indexes_dic.items() if v[0] >= weeks_expected_per_year // 2}
+
+
+
 
 def fractional_index_maker(current_year, weekday_calendar_starts, maintenance_path):
     """
@@ -214,7 +224,7 @@ def fraction_hunter(wishful_year, wishful_month, wishful_day, weekday_calendar_s
     try: 
         return fraction_spot[wishful_date]
     except KeyError:
-        return f"So sorry, your wishful date '{wishful_date}' isn't available due our current schedule"
+        return f"So sorry, your wishful date isn't available due our current schedule"
 
 def unfractional_dates_list(current_year, weekday_calendar_starts, maintenance_path):
     """
