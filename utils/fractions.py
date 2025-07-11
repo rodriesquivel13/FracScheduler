@@ -33,9 +33,9 @@ def holly_weeks(current_year, weekday_calendar_starts):
 
             special_dates = [newyear,constitution,benito,revolution,easter,semana_santa,christ,dad]
         else:
-            semana_santa = hollydays.sabado_santo(current_year)
+            semana_santa = hollydays.sabado_santo(current_year + 1)
             thanks = hollydays.thanksgiving(current_year)
-            newyear = hollydays.new_year(current_year)
+            newyear = hollydays.new_year(current_year + 1)
             christ = hollydays.christmas(current_year)
             special_dates = [semana_santa,thanks,newyear,christ]
 

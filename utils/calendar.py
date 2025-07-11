@@ -78,7 +78,11 @@ def semana_santa_weeker(year, weekday_calendar_starts):
     This functions return us the week index of semana semana each year, 
     depending on which weekday it starts on.
     """
-    saturday = hollydays.sabado_santo(year)
+    if type == "regular":
+        saturday = hollydays.sabado_santo(year)
+    else:
+        saturday = hollydays.sabado_santo(year + 1)
+
     calendar = main_day_weeker(year,weekday_calendar_starts)
     return calendar[saturday]
 
@@ -87,7 +91,11 @@ def easter_weeker(year, weekday_calendar_starts):
     This functions return us the week index of easter each year,
     depending on which weekday it starts on.
     """
-    saturday = hollydays.easter_saturday(year)
+    if type == "regular":
+        saturday = hollydays.easter_saturday(year)
+    else:
+        saturday = hollydays.easter_saturday(year + 1)
+        
     calendar = main_day_weeker(year,weekday_calendar_starts)
     return calendar[saturday]
 
