@@ -1,5 +1,8 @@
 from datetime import datetime
 # =============  GLOBAL PARAMETERS ===============================
+def type():
+    return "snow"
+
 def number_of_fractions():
     return 8
 
