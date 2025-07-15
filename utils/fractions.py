@@ -245,12 +245,12 @@ def fractional_index_maker(current_year, weekday_calendar_starts, maintenance_pa
         
         return {**snow_fractional_index_maker,**sand_fractional_index_maker}
 
-def fraction_hunter(wishful_year, wishful_month, wishful_day, weekday_calendar_starts, maintenance_path):
+def fraction_hunter(wishful_year, wishful_month, wishful_day, weekday_calendar_starts, maintenance_path,type):
     """
     This function searches what fraction is needed for a specific wishful date.      
     """
-    current_calendar = fractional_index_maker(wishful_year, weekday_calendar_starts, maintenance_path)
-    next_calendar = fractional_index_maker(wishful_year + 1, weekday_calendar_starts, maintenance_path)
+    current_calendar = fractional_index_maker(wishful_year, weekday_calendar_starts, maintenance_path,type)
+    next_calendar = fractional_index_maker(wishful_year + 1, weekday_calendar_starts, maintenance_path,type)
 
     fraction_spot = {**current_calendar, **next_calendar}
 
@@ -261,13 +261,13 @@ def fraction_hunter(wishful_year, wishful_month, wishful_day, weekday_calendar_s
     except KeyError:
         return f"So sorry, your wishful date isn't available due our current schedule"
 
-def unfractional_dates_list(current_year, weekday_calendar_starts, maintenance_path):
+def unfractional_dates_list(current_year, weekday_calendar_starts, maintenance_path,type):
     """
     This funcion has as goal crafting a list with no fractional hollydays, such that,
     this list must have the rest of the hollydays of each year.
     """
     whole_calendar = cd.main_day_sequence(current_year, weekday_calendar_starts)
-    fractional_calendar = fractional_index_maker(current_year, weekday_calendar_starts, maintenance_path)
+    fractional_calendar = fractional_index_maker(current_year, weekday_calendar_starts, maintenance_path,type)
 
     hollydays = list(whole_calendar.keys())
     fractional_dates = set(fractional_calendar.keys())  # We choose set instead of list for faster searching
