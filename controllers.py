@@ -15,17 +15,6 @@ from models import apartament_maintenance_path, apartament_weekday_calendar_star
 
 controllers = Blueprint('controllers', __name__)
 
-# La función map_level_to_internal ya no se utiliza, pero se conserva por compatibilidad.
-def map_level_to_internal(level):
-    if level in (2, 5, 8):
-        return 1
-    elif level in (3, 6, 9):
-        return 2
-    elif level in (4, 7, 10):
-        return 3
-    else:
-        return 1  # Fallback a Tuesday
-
 @controllers.route('/')
 def index():
     year = request.args.get('year', 2026, type=int)

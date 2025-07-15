@@ -1,10 +1,9 @@
 from datetime import timedelta
 from . import hollydays
 from . import parameters
-type = parameters.type()
 
  # ======== Date-related functions ========
-def first_day_first_week(year, weekday_calendar_starts): 
+def first_day_first_week(year, weekday_calendar_starts,type): 
     """
     We'll use a calendar that lists its weeks.
     Every week in this calendar begins in monday, tuesday, wednesday,... (or 0,1,2,... according python index)
@@ -73,7 +72,7 @@ def extra_week_indicator(year,weekday_calendar_starts):
         return True
     return False
 
-def semana_santa_weeker(year, weekday_calendar_starts):
+def semana_santa_weeker(year, weekday_calendar_starts,type):
     """
     This functions return us the week index of semana semana each year, 
     depending on which weekday it starts on.
@@ -86,7 +85,7 @@ def semana_santa_weeker(year, weekday_calendar_starts):
     calendar = main_day_weeker(year,weekday_calendar_starts)
     return calendar[saturday]
 
-def easter_weeker(year, weekday_calendar_starts):
+def easter_weeker(year, weekday_calendar_starts,type):
     """
     This functions return us the week index of easter each year,
     depending on which weekday it starts on.

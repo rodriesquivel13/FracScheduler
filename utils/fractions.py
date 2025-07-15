@@ -3,7 +3,6 @@ from . import hollydays
 from . import calendar as cd
 from . import parameters
 
-type = parameters.type()
 #============= Global Variables =====================
 fractions_quantity = parameters.number_of_fractions()
 weeks_expected_per_year = parameters.weeks_expected_per_year()
@@ -15,7 +14,7 @@ def holly_weeks(current_year, weekday_calendar_starts):
     Those hollydays could be deterministic or probabilistic.
     """
 
-    def deterministic_holly_weeks(current_year,weekday_calendar_starts):
+    def deterministic_holly_weeks(current_year,weekday_calendar_starts,type):
         """
         Deterministic hollydays are those which have an specific rule to determinate them,
         for example mexican revolution day is third monday of each november, so this funcion return us 
@@ -48,7 +47,7 @@ def holly_weeks(current_year, weekday_calendar_starts):
 
         return week_index
 
-    def probabilistic_holly_weeks(current_year,weekday_calendar_starts):
+    def probabilistic_holly_weeks(current_year,weekday_calendar_starts,type):
         """
         Others hollydays don't let us get sure about whether the week which contains the date will the week when the date will celebrated.
         For example, figure out independence day takes on tuesday and owr fractional week begins also in tusday but people wants to celecrate in previous momday.
@@ -91,7 +90,7 @@ def holly_weeks(current_year, weekday_calendar_starts):
 
     return gold
 
-def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_path):
+def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_path,type):
     """
     Select week indices for maintenance based on a path and the year characteristics.
     """
@@ -151,7 +150,7 @@ def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_pa
         
     return maintenance_weeks
     
-def fractional_day_weeker(current_year, weekday_calendar_starts, maintenance_path):
+def fractional_day_weeker(current_year, weekday_calendar_starts, maintenance_path,type):
     """
     This function lists weeks which are able to distribute their to fraction's owners.
     """
@@ -203,7 +202,7 @@ def fractional_day_weeker(current_year, weekday_calendar_starts, maintenance_pat
         return {**indexed_snow_calendar,**indexed_sand_calendar}
         
 
-def fractional_index_maker(current_year, weekday_calendar_starts, maintenance_path):
+def fractional_index_maker(current_year, weekday_calendar_starts, maintenance_path,type):
     """
     This function indexes each date with fraction's index.
     """
