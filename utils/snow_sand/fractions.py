@@ -176,21 +176,41 @@ def fractional_index_maker(current_year, weekday_calendar_starts, maintenance_pa
     
     return {**snow_fractional_index_maker,**sand_fractional_index_maker}
 
-def fraction_hunter(wishful_year, wishful_month, wishful_day, weekday_calendar_starts, maintenance_path):
+def fraction_hunter(
+    wishful_year, wishful_month, wishful_day,
+    weekday_calendar_starts, maintenance_path
+):
     """
-    This function searches what fraction is needed for a specific wishful date.      
+    Busca la fracción del día pedido dentro de la temporada de snow-bird que
+    empieza el 22 de septiembre. Si la fecha es anterior al 22-Sep del año
+    dado, cae en la temporada que arrancó el año anterior.
     """
-    current_calendar = fractional_index_maker(wishful_year, weekday_calendar_starts, maintenance_path)
-    next_calendar = fractional_index_maker(wishful_year + 1, weekday_calendar_starts, maintenance_path)
-
-    fraction_spot = {**current_calendar, **next_calendar}
-
     wishful_date = datetime(wishful_year, wishful_month, wishful_day)
 
-    try: 
+    # Fecha de inicio “oficial” de temporada en el año dado
+    season_start = parameters.first_day_snow(wishful_year)
+
+    # Si piden algo antes del 22-Sep, pertenece a la temporada del año anterior
+    if wishful_date < season_start:
+        season_year = wishful_year - 1
+    else:
+        season_year = wishful_year
+
+    # Construimos calendario fraccional de esa temporada y la siguiente
+    current_calendar = fractional_index_maker(
+        season_year, weekday_calendar_starts, maintenance_path
+    )
+    next_calendar = fractional_index_maker(
+        season_year + 1, weekday_calendar_starts, maintenance_path
+    )
+
+    # Unificamos ambas tablas y buscamos la fecha
+    fraction_spot = {**current_calendar, **next_calendar}
+
+    try:
         return fraction_spot[wishful_date]
     except KeyError:
-        return f"So sorry, your wishful date isn't available due our current schedule"
+        return "So sorry, your wishful date isn't available due our current schedule"
 
 def unfractional_dates_list(current_year, weekday_calendar_starts, maintenance_path):
     """
