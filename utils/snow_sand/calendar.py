@@ -1,20 +1,16 @@
 from datetime import timedelta
-from . import hollydays
-from . import parameters
-type = parameters.type()
+from .. import hollydays
+from .. import parameters
 
  # ======== Date-related functions ========
-def first_day_first_week(year, weekday_calendar_starts): 
+def first_day_first_week(year, weekday_calendar_starts):
     """
     We'll use a calendar that lists its weeks.
     Every week in this calendar begins in monday, tuesday, wednesday,... (or 0,1,2,... according python index)
     January first belongs to the first week of each year.
     This function caculates the date of the first day of the first week of each year and calendar, depending on which weekday it starts on.  
     """
-    if type == "regular":
-        day = parameters.first_day_regular(year)
-    else:
-        day = parameters.first_day_snow(year)
+    day = parameters.first_day_snow(year)
 
     shift = (day.weekday() - weekday_calendar_starts) % 7   
     return day - timedelta(days = shift)
@@ -78,10 +74,7 @@ def semana_santa_weeker(year, weekday_calendar_starts):
     This functions return us the week index of semana semana each year, 
     depending on which weekday it starts on.
     """
-    if type == "regular":
-        saturday = hollydays.sabado_santo(year)
-    else:
-        saturday = hollydays.sabado_santo(year + 1)
+    saturday = hollydays.sabado_santo(year + 1)
 
     calendar = main_day_weeker(year,weekday_calendar_starts)
     return calendar[saturday]
@@ -91,10 +84,7 @@ def easter_weeker(year, weekday_calendar_starts):
     This functions return us the week index of easter each year,
     depending on which weekday it starts on.
     """
-    if type == "regular":
-        saturday = hollydays.easter_saturday(year)
-    else:
-        saturday = hollydays.easter_saturday(year + 1)
+    saturday = hollydays.easter_saturday(year + 1)
         
     calendar = main_day_weeker(year,weekday_calendar_starts)
     return calendar[saturday]
@@ -107,3 +97,4 @@ def thanksgiving_weeker(year, weekday_calendar_starts):
     date = hollydays.thanksgiving(year)
     calendar = main_day_weeker(year,weekday_calendar_starts)
     return calendar[date]
+
