@@ -18,7 +18,7 @@
   <form method="get" action="/">
     <label for="year">Year:</label>
     <input type="number" id="year" name="year" value="{{ year }}" class="form-button">
-    
+
     <label for="apartament">Apartament:</label>
     <select id="apartament" name="apartament" class="form-button">
       {% for a in available_apartaments %}
@@ -72,15 +72,14 @@
   </form>
 
   <div class="calendar">
-    {# — Diciembre del año anterior — #}
-    {% if previous_december %}
+
+    {# Diciembre del año anterior: solo para “regular” (siempre 1 mes) #}
+    {% if apt_type == 'regular' %}
       <div class="month">
         <h2>{{ calendar.month_name[12] }} {{ year - 1 }}</h2>
         <table>
           <thead>
-            <tr>
-              {% for d in day_names %}<th>{{ d }}</th>{% endfor %}
-            </tr>
+            <tr>{% for d in day_names %}<th>{{ d }}</th>{% endfor %}</tr>
           </thead>
           <tbody>
             {% for week in previous_december %}
@@ -97,6 +96,7 @@
                                      or (date in unfractional_dates_prev)
                                      or (date in unfractional_dates_next) %}
                       {% set paint_fraction = fraction and (fraction[0] in selected_fractions or 'all' in selected_fractions) %}
+
                       {% if 'unfractional' in selected_fractions and is_unf %}
                         <div class="date-circle" style="background-color:#000;color:#fff;">{{ day }}</div>
                       {% elif paint_fraction %}
@@ -118,23 +118,21 @@
       </div>
     {% endif %}
 
-    {# — Meses del año seleccionado — #}
-    {% for mi, month in months_with_index %}
+    {# Meses dinámicos: 12 para regular, 13 para snow #}
+    {% for month_num, month_year, month_matrix in months_with_index %}
       <div class="month">
-        <h2>{{ calendar.month_name[mi+1] }} {{ year }}</h2>
+        <h2>{{ calendar.month_name[month_num] }} {{ month_year }}</h2>
         <table>
           <thead>
-            <tr>
-              {% for d in day_names %}<th>{{ d }}</th>{% endfor %}
-            </tr>
+            <tr>{% for d in day_names %}<th>{{ d }}</th>{% endfor %}</tr>
           </thead>
           <tbody>
-            {% for week in month %}
+            {% for week in month_matrix %}
               <tr>
                 {% for day in week %}
                   <td class="{{ 'empty' if day == 0 else '' }}">
                     {% if day != 0 %}
-                      {% set date = datetime(year, mi+1, day) %}
+                      {% set date = datetime(month_year, month_num, day) %}
                       {% set frac_c = fractional_indices.get(date) %}
                       {% set frac_p = fractional_indices_prev.get(date) %}
                       {% set frac_n = fractional_indices_next.get(date) %}
@@ -143,6 +141,7 @@
                                      or (date in unfractional_dates_prev)
                                      or (date in unfractional_dates_next) %}
                       {% set paint_fraction = fraction and (fraction[0] in selected_fractions or 'all' in selected_fractions) %}
+
                       {% if 'unfractional' in selected_fractions and is_unf %}
                         <div class="date-circle" style="background-color:#000;color:#fff;">{{ day }}</div>
                       {% elif paint_fraction %}
@@ -164,7 +163,7 @@
       </div>
     {% endfor %}
 
-    {# — Ghost cell en lugar de enero próximo — #}
+    {# Ghost cell + Fraction Hunter footer #}
     <div class="month ghost">
       <h2>&nbsp;</h2>
       <div class="fraction-hunter-footer">
