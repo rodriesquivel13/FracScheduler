@@ -224,12 +224,3 @@ def unfractional_dates_list(current_year, weekday_calendar_starts, maintenance_p
     fractional_dates = set(fractional_calendar.keys())  # We choose set instead of list for faster searching
 
     return [i for i in hollydays if i not in fractional_dates]
-
-
-
-# ======== Test Block ========
-
-if __name__ == "__main__":
-    print(f'ff')
-
-
