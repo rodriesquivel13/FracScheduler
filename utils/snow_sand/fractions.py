@@ -93,9 +93,9 @@ def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_pa
 
         snow_reserved_weeks = [[18],[25]]
         if cd.extra_week_indicator(current_year,weekday_calendar_starts):
-            sand_reserved_weeks = [[12],[19],[26]]
+            sand_reserved_weeks = [[8],[21],[26]]
         else:
-            sand_reserved_weeks = [[18],[25]]
+            sand_reserved_weeks = [[8],[21]]
 
         snow_maintenance_dic = {k:v for k,v in full_snow_calendar.items() if v in snow_reserved_weeks}
         sand_maintenance_dic = {k:v for k,v in full_sand_calendar.items() if v in sand_reserved_weeks}
@@ -135,7 +135,14 @@ def fractional_day_weeker(current_year, weekday_calendar_starts, maintenance_pat
     snow_index_list = [[i] for i in range(fractions_quantity // 2) for _ in range(snow_weeks_in_a_row * 7)]
     indexed_snow_calendar = dict(zip(clean_snow_calendar.keys(),snow_index_list))
 
+    #======== Apartir de aquí inicia la teoria de temporadas de orden n
+    semana_santa_index = cd.semana_santa_weeker(current_year,weekday_calendar_starts)
+    easter_index = cd.easter_weeker(current_year,weekday_calendar_starts)
+    special_weeks = []
+    special_weeks.append(semana_santa_index)
+    special_weeks.append(easter_index)
     sand_weeks_in_a_row = 2
+
     full_sand_calendar = {k:[v[0] - weeks_expected_per_year // 2] for k,v in day_week_indexes_dic.items() if v[0] >= weeks_expected_per_year // 2}
     clean_sand_calendar = {k:v for k,v in full_sand_calendar.items() if v not in maintenance_weeks}
     sand_index_list = [[i] for _ in range(3) for i in range(fractions_quantity // 2) for __ in range(sand_weeks_in_a_row * 7)]
