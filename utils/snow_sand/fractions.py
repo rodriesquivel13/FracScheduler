@@ -84,24 +84,20 @@ def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_pa
         This function crafts a dictionarie with no hollyweeks in its keys (datetimes),
         and also it bounds the dictionarie particulary.
         """
+        maintenance_list = [[8],[25],[34],[47]]
         if cd.extra_week_indicator(current_year,weekday_calendar_starts):
             reserved_weeks += 1
+            maintenance_list.append([52])
         calendar = cd.main_day_weeker(current_year, weekday_calendar_starts)
-        
-        full_snow_calendar = {k:v for k,v in calendar.items() if v[0] < weeks_expected_per_year // 2}
-        full_sand_calendar = {k:[v[0] - weeks_expected_per_year // 2] for k,v in calendar.items() if v[0] >= weeks_expected_per_year // 2}
 
-        snow_reserved_weeks = [[18],[25]]
-        if cd.extra_week_indicator(current_year,weekday_calendar_starts):
-            sand_reserved_weeks = [[8],[21],[26]]
-        else:
-            sand_reserved_weeks = [[8],[21]]
+        regular = {k:v for (k,v) in calendar.items() if v in maintenance_list}
+        list = [[i//7] for i in range(len(regular.values()))]
+        regular = dict(zip(regular.keys(),list))
+        bound = len(regular.keys()) // 7
+        max_regular_len = bound // reserved_weeks * reserved_weeks
+        dic = {k: v for k, v in regular.items() if v[0] < max_regular_len}
 
-        snow_maintenance_dic = {k:v for k,v in full_snow_calendar.items() if v in snow_reserved_weeks}
-        sand_maintenance_dic = {k:v for k,v in full_sand_calendar.items() if v in sand_reserved_weeks}
-
-        pre_dic = {**snow_maintenance_dic,**sand_maintenance_dic}
-        return {k:[0] for k in pre_dic.keys()}
+        return {k:[(v[0] + (current_year % fractions_quantity)) % (max_regular_len // reserved_weeks)] for (k,v) in dic.items()}
 
     maintenance_deserved_weeks = maintenance_weeks_paths(current_year, weekday_calendar_starts,reserved_weeks)
     lenght = len(maintenance_deserved_weeks.values()) // 7 // reserved_weeks
@@ -122,7 +118,7 @@ def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_pa
     
 def fractional_day_weeker(current_year, weekday_calendar_starts, maintenance_path):
     """
-    This function lists weeks which are able to distribute their to fraction's owners.
+    This function lists weeks which are able to distribute them to fraction's owners.
     """
     maintenance_weeks = maintenance_weeks_list(current_year,weekday_calendar_starts, maintenance_path)
     
