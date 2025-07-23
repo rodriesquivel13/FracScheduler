@@ -194,9 +194,6 @@ def snow_hollydays_dic(current_year):
         work : "Día del trabajo",
     }
 
-
-
-
 # ======== Test Block ========
 
 if __name__ == "__main__":
