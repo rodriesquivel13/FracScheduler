@@ -177,7 +177,7 @@ td.unfractional {
     box-sizing: border-box;
 }
 
-//* Contenedor cuadrado para el borde de festivos resaltados */
+/* Contenedor cuadrado para el borde de festivos resaltados */
 .date-cell {
     display: inline-flex;
     width: 32px;
