@@ -151,64 +151,78 @@ def fractional_day_weeker(current_year, weekday_calendar_starts, maintenance_pat
     return week_fractional_indexes
     
 
-def fractional_index_maker(current_year, weekday_calendar_starts, maintenance_path):
+def fractional_index_maker(
+    current_year, 
+    weekday_calendar_starts, 
+    maintenance_path
+):
     """
-    This function indexes each date with fraction's index.
+    Indexes each date with its corresponding fraction index.
     """
-    fractional_calendar_week_indexed = fractional_day_weeker(current_year,weekday_calendar_starts, maintenance_path)
+    def calculate_fraction_index(
+        week_index, offset, 
+        season_fraction_count, 
+        season_week_count
+    ):
+        return ((week_index - offset) % season_week_count) % season_fraction_count
+
+    def build_fraction_map(week_dict, transform_func, offset=0, base_index=0):
+        return {
+            k: [calculate_fraction_index(transform_func(v[0]), offset, season_fractions_quantity, season_fractional_weeks_quantity) + base_index]
+            for k, v in week_dict.items()
+        }
+
+    fractional_calendar_week_indexed = fractional_day_weeker(current_year, weekday_calendar_starts, maintenance_path)
     total_fractional_weeks_quantity = weeks_expected_per_year // fractions_quantity * fractions_quantity
-    
-    season_fractional_weeeks_quantity = total_fractional_weeks_quantity // 2
+
+    season_fractional_weeks_quantity = total_fractional_weeks_quantity // 2
     season_fractions_quantity = fractions_quantity // 2
-    lenght_list = list(fractional_calendar_week_indexed.items())
-    half = len(lenght_list) // 2
+    mid_point = len(fractional_calendar_week_indexed) // 2
 
-    snow_fractional_calendar_week_indexed = {k:v for k,v in fractional_calendar_week_indexed.items() if v[0] < half}
-    snow_week_index_list = list(snow_fractional_calendar_week_indexed.values())
-    snow_week_index_list = [[v[0]//6] for v in snow_week_index_list]
-    snow_fraction_index_list = []
-    for i in range(len(snow_week_index_list)):
-        snow_week_index = snow_week_index_list[i]
-        snow_fraction_index = [((snow_week_index[0] - (current_year % season_fractions_quantity))  % season_fractional_weeeks_quantity) % season_fractions_quantity]
-        snow_fraction_index_list.append(snow_fraction_index)
-    snow_fractional_index_maker = dict(zip(snow_fractional_calendar_week_indexed.keys(),snow_fraction_index_list))
+    # Snow season
+    snow_weeks = {
+        k: v for k, v in fractional_calendar_week_indexed.items() if v[0] < mid_point
+    }
+    snow_fractional = build_fraction_map(
+        snow_weeks,
+        lambda w: w // 6,
+        offset=current_year % season_fractions_quantity
+    )
 
-    sand_first_range = range(24,32)
-    sand_second_range = range(32,44)
-    sand_thrird_range = range(44,48)
+    # Sand season ranges
+    sand_ranges = {
+        'first': range(24, 32),
+        'second': range(32, 44),
+        'third': range(44, 48)
+    }
 
-    first_sand_fractional_calendar_week_indexed = {k:v for k,v in fractional_calendar_week_indexed.items() if v[0] in sand_first_range}
-    first_sand_week_index_list = list(first_sand_fractional_calendar_week_indexed.values())
-    first_sand_week_index_list = [[v[0] - min(sand_first_range)] for v in first_sand_week_index_list]
-    first_sand_fraction_index_list = []
-    for i in range(len(first_sand_week_index_list)):
-        first_sand_week_index = first_sand_week_index_list[i]
-        first_sand_fraction_index = [((first_sand_week_index[0] - (current_year % season_fractions_quantity))  % season_fractional_weeeks_quantity) % season_fractions_quantity + 4]
-        first_sand_fraction_index_list.append(first_sand_fraction_index)
-    first_sand_fractional_index_maker = dict(zip(first_sand_fractional_calendar_week_indexed.keys(),first_sand_fraction_index_list))
+    sand_fractionals = []
 
-    second_sand_fractional_calendar_week_indexed = {k:v for k,v in fractional_calendar_week_indexed.items() if v[0] in sand_second_range}
-    second_sand_week_index_list = list(second_sand_fractional_calendar_week_indexed.values())
-    second_sand_week_index_list = [[(v[0] - min(sand_second_range))//3] for v in second_sand_week_index_list]
-    second_sand_fraction_index_list = []
-    for i in range(len(second_sand_week_index_list)):
-        second_sand_week_index = second_sand_week_index_list[i]
-        second_sand_fraction_index = [((second_sand_week_index[0] - (current_year % season_fractions_quantity))  % season_fractional_weeeks_quantity) % season_fractions_quantity + 4]
-        second_sand_fraction_index_list.append(second_sand_fraction_index)
-    second_sand_fractional_index_maker = dict(zip(second_sand_fractional_calendar_week_indexed.keys(),second_sand_fraction_index_list))
+    for label, week_range in sand_ranges.items():
+        weeks = {
+            k: v for k, v in fractional_calendar_week_indexed.items() if v[0] in week_range
+        }
 
-    thrird_sand_fractional_calendar_week_indexed = {k:v for k,v in fractional_calendar_week_indexed.items() if v[0] in sand_thrird_range}
-    thrird_sand_week_index_list = list(thrird_sand_fractional_calendar_week_indexed.values())
-    thrird_sand_week_index_list = [[v[0] - min(sand_thrird_range)] for v in thrird_sand_week_index_list]
-    thrird_sand_fraction_index_list = []
-    for i in range(len(thrird_sand_week_index_list)):
-        thrird_sand_week_index = thrird_sand_week_index_list[i]
-        thrird_sand_fraction_index = [((thrird_sand_week_index[0] - (current_year % season_fractions_quantity))  % season_fractional_weeeks_quantity) % season_fractions_quantity + 4]
-        thrird_sand_fraction_index_list.append(thrird_sand_fraction_index)
-    thrird_sand_fractional_index_maker = dict(zip(thrird_sand_fractional_calendar_week_indexed.keys(),thrird_sand_fraction_index_list))
-    
-    
-    return {**snow_fractional_index_maker,**first_sand_fractional_index_maker,**second_sand_fractional_index_maker,**thrird_sand_fractional_index_maker}
+        if label == 'second':
+            transform = lambda w: (w - min(week_range)) // 3
+        else:
+            transform = lambda w: w - min(week_range)
+
+        sand_fractionals.append(
+            build_fraction_map(
+                weeks,
+                transform,
+                offset=current_year % season_fractions_quantity,
+                base_index=4
+            )
+        )
+
+    # Combine all
+    final_map = snow_fractional
+    for partial_map in sand_fractionals:
+        final_map.update(partial_map)
+
+    return final_map
 
 def fraction_hunter(
     wishful_year, wishful_month, wishful_day,
@@ -246,7 +260,11 @@ def fraction_hunter(
     except KeyError:
         return "So sorry, your wishful date isn't available due our current schedule"
 
-def unfractional_dates_list(current_year, weekday_calendar_starts, maintenance_path):
+def unfractional_dates_list(
+    current_year,
+    weekday_calendar_starts, 
+    maintenance_path
+):
     """
     This funcion has as goal crafting a list with no fractional hollydays, such that,
     this list must have the rest of the hollydays of each year.
