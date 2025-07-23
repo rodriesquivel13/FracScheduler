@@ -39,8 +39,8 @@ apartament_maintenance_path = {
 
 
 apartament_weekday_calendar_starts = {
-    104: 3,
-    105: 3,
+    104: 1,
+    105: 1,
     204: 1,
     205: 1,
     304: 2,
