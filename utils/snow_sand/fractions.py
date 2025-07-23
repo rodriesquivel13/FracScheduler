@@ -8,13 +8,19 @@ fractions_quantity = parameters.number_of_fractions()
 weeks_expected_per_year = parameters.weeks_expected_per_year()
 
 # ======== Fractions-related functions ========
-def holly_weeks(current_year, weekday_calendar_starts):
+def holly_weeks(
+    current_year,
+    weekday_calendar_starts
+):
     """
     Some weeks have special hollydays which no one want to miss them. 
     Those hollydays could be deterministic or probabilistic.
     """
 
-    def deterministic_holly_weeks(current_year,weekday_calendar_starts):
+    def deterministic_holly_weeks(
+        current_year,
+        weekday_calendar_starts
+    ):
         """
         Deterministic hollydays are those which have an specific rule to determinate them,
         for example mexican revolution day is third monday of each november, so this funcion return us 
@@ -36,7 +42,10 @@ def holly_weeks(current_year, weekday_calendar_starts):
 
         return week_index
 
-    def probabilistic_holly_weeks(current_year,weekday_calendar_starts):
+    def probabilistic_holly_weeks(
+        current_year,
+        weekday_calendar_starts
+    ):
         """
         Others hollydays don't let us get sure about whether the week which contains the date will the week when the date will celebrated.
         For example, figure out independence day takes on tuesday and owr fractional week begins also in tusday but people wants to celecrate in previous momday.
@@ -72,14 +81,22 @@ def holly_weeks(current_year, weekday_calendar_starts):
 
     return gold
 
-def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_path):
+def maintenance_weeks_list(
+    current_year, 
+    weekday_calendar_starts, 
+    maintenance_path
+):
     """
     Select week indices for maintenance based on a path and the year characteristics.
     """
     weeks_per_fraction = weeks_expected_per_year // fractions_quantity
     reserved_weeks = weeks_expected_per_year - fractions_quantity * weeks_per_fraction
     
-    def maintenance_weeks_paths(current_year, weekday_calendar_starts,reserved_weeks):
+    def maintenance_weeks_paths(
+        current_year,
+        weekday_calendar_starts,
+        reserved_weeks
+    ):
         """
         This function crafts a dictionarie with no hollyweeks in its keys (datetimes),
         and also it bounds the dictionarie particulary.
@@ -116,7 +133,11 @@ def maintenance_weeks_list(current_year, weekday_calendar_starts, maintenance_pa
         
     return maintenance_weeks
     
-def fractional_day_weeker(current_year, weekday_calendar_starts, maintenance_path):
+def fractional_day_weeker(
+    current_year, 
+    weekday_calendar_starts, 
+    maintenance_path
+):
     """
     This function lists weeks which are able to distribute their to fraction's owners.
     """
@@ -166,7 +187,12 @@ def fractional_index_maker(
     ):
         return ((week_index - offset) % season_week_count) % season_fraction_count
 
-    def build_fraction_map(week_dict, transform_func, offset=0, base_index=0):
+    def build_fraction_map(
+        week_dict, 
+        transform_func, 
+        offset=0, 
+        base_index=0
+    ):
         return {
             k: [calculate_fraction_index(transform_func(v[0]), offset, season_fractions_quantity, season_fractional_weeks_quantity) + base_index]
             for k, v in week_dict.items()
@@ -225,8 +251,11 @@ def fractional_index_maker(
     return final_map
 
 def fraction_hunter(
-    wishful_year, wishful_month, wishful_day,
-    weekday_calendar_starts, maintenance_path
+    wishful_year, 
+    wishful_month,
+    wishful_day,
+    weekday_calendar_starts, 
+    maintenance_path
 ):
     """
     Busca la fracción del día pedido dentro de la temporada de snow-bird que
