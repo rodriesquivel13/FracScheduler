@@ -136,7 +136,9 @@ def independence_day(current_year):
 
 
 # ========= Hollydays Dics ====
-def regular_hollydays_dic(current_year):
+def regular_hollydays_dic(
+    current_year
+):
     semana_santa = sabado_santo(current_year)
     easter = easter_saturday(current_year)
     new = new_year(current_year)
@@ -165,7 +167,9 @@ def regular_hollydays_dic(current_year):
         work : "Día del trabajo",
     }
 
-def snow_hollydays_dic(current_year):
+def snow_hollydays_dic(
+    current_year
+):
     semana_santa = sabado_santo(current_year + 1)
     easter = easter_saturday(current_year + 1)
     new = new_year(current_year + 1)

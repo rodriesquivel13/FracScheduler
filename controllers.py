@@ -10,7 +10,6 @@ from models import (
     apartament_weekday_calendar_starts,
     apartament_type,
 )
-
 from utils import (
     regular_fractional_index_maker,
     snow_fractional_index_maker,
@@ -19,6 +18,7 @@ from utils import (
     regular_fraction_hunter,
     snow_fraction_hunter,
 )
+from utils.hollydays import regular_hollydays_dic, snow_hollydays_dic
 
 controllers = Blueprint('controllers', __name__)
 
@@ -105,6 +105,12 @@ def index():
     if 'unfractional' not in selected:
         unf_dates = unf_dates_prev = unf_dates_next = []
 
+    # Festivos dorados según tipo de calendario
+    if apt_type == "snow":
+        golden_holidays = set(snow_hollydays_dic(year).keys())
+    else:
+        golden_holidays = set(regular_hollydays_dic(year).keys())
+
     return render_template(
         'calendar.html',
         year=year,
@@ -126,7 +132,8 @@ def index():
         unfractional_dates=unf_dates,
         unfractional_dates_prev=unf_dates_prev,
         unfractional_dates_next=unf_dates_next,
-        selected_fractions=selected
+        selected_fractions=selected,
+        golden_holidays=golden_holidays,
     )
 
 
@@ -211,6 +218,12 @@ def hunt_fraction():
     previous_december = display_cal.monthdayscalendar(wish.year - 1, 12)
     day_names         = [calendar.day_abbr[i] for i in range(7)]
 
+    # Festivos dorados para el año buscado
+    if apt_type == "snow":
+        golden_holidays = set(snow_hollydays_dic(wish.year).keys())
+    else:
+        golden_holidays = set(regular_hollydays_dic(wish.year).keys())
+
     return render_template(
         'calendar.html',
         year=wish.year,
@@ -232,5 +245,6 @@ def hunt_fraction():
         unfractional_dates=unf_dates,
         unfractional_dates_prev=unf_dates_prev,
         unfractional_dates_next=unf_dates_next,
-        selected_fractions=[result[0]]
+        selected_fractions=[result[0]],
+        golden_holidays=golden_holidays,
     )
