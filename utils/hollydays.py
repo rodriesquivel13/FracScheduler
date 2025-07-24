@@ -183,6 +183,9 @@ def snow_hollydays_dic(
     valentines = valentines_day(current_year + 1)
     mother = mothers_day(current_year + 1)
     work = work_day(current_year + 1)
+    independence_1 = independence_day(current_year)
+    independence_2 = independence_day(current_year + 1)
+    independence_3 = independence_day(current_year - 1)
 
     return {
         semana_santa : "Semana Santa's weekend",
@@ -197,6 +200,10 @@ def snow_hollydays_dic(
         valentines: "Valentines' day",
         mother : "Mother's day",
         work : "Día del trabajo",
+        independence_1 : "Mexican independence day",
+        independence_2 : "Mexican independence day",
+        independence_3 : "Mexican independence day"
+
     }
 
 # ======== Test Block ========
