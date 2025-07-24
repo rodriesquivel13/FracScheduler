@@ -18,7 +18,7 @@
   <form method="get" action="/">
     <label for="year">Year:</label>
     <input type="number" id="year" name="year" value="{{ year }}" class="form-button">
-    
+
     <label for="apartament">Apartament:</label>
     <select id="apartament" name="apartament" class="form-button">
       {% for a in available_apartaments %}
@@ -72,15 +72,13 @@
   </form>
 
   <div class="calendar">
-    {# — Diciembre del año anterior — #}
-    {% if previous_december %}
+
+    {% if apt_type == 'regular' %}
       <div class="month">
         <h2>{{ calendar.month_name[12] }} {{ year - 1 }}</h2>
         <table>
           <thead>
-            <tr>
-              {% for d in day_names %}<th>{{ d }}</th>{% endfor %}
-            </tr>
+            <tr>{% for d in day_names %}<th>{{ d }}</th>{% endfor %}</tr>
           </thead>
           <tbody>
             {% for week in previous_december %}
@@ -88,31 +86,51 @@
                 {% for day in week %}
                   <td class="{{ 'empty' if day == 0 else '' }}">
                     {% if day != 0 %}
-                      {# lógica idéntica a la del año actual #}
                       {% set date = datetime(year-1, 12, day) %}
                       {% set frac_c = fractional_indices.get(date) %}
                       {% set frac_p = fractional_indices_prev.get(date) %}
                       {% set frac_n = fractional_indices_next.get(date) %}
-                      {% if frac_c %}
-                        {% set fraction = frac_c %}
-                      {% elif frac_p %}
-                        {% set fraction = frac_p %}
-                      {% elif frac_n %}
-                        {% set fraction = frac_n %}
-                      {% else %}
-                        {% set fraction = None %}
-                      {% endif %}
+                      {% set fraction = frac_c or frac_p or frac_n %}
                       {% set is_unf = (date in unfractional_dates)
                                      or (date in unfractional_dates_prev)
                                      or (date in unfractional_dates_next) %}
                       {% set paint_fraction = fraction and (fraction[0] in selected_fractions or 'all' in selected_fractions) %}
+                      {% set is_golden = date in golden_holidays %}
+
                       {% if 'unfractional' in selected_fractions and is_unf %}
-                        <div class="date-circle" style="background-color:#000;color:#fff;">{{ day }}</div>
+                        {% if is_golden %}
+                          <div class="date-cell golden">
+                            <div class="date-circle" style="background-color:#000;color:#fff;"
+                                 data-tooltip="{{ golden_holidays[date] }}">
+                              {{ day }}
+                            </div>
+                          </div>
+                        {% else %}
+                          <div class="date-circle" style="background-color:#000;color:#fff;">
+                            {{ day }}
+                          </div>
+                        {% endif %}
                       {% elif paint_fraction %}
-                        <div class="date-circle"
-                             style="background-color:{{ fraction_colors[fraction[0]] }};
-                                    color:{% if fraction[0] in [0,2,4,6] %}#fff{% else %}#000{% endif %};">
-                          {{ day }}
+                        {% if is_golden %}
+                          <div class="date-cell golden">
+                            <div class="date-circle"
+                                 style="background-color:{{ fraction_colors[fraction[0]] }};
+                                        color:{% if fraction[0] in [0,2,4,6] %}#fff{% else %}#000{% endif %};"
+                                 data-tooltip="Fraction {{ 8 if fraction[0] == 0 else fraction[0] }} - {{ golden_holidays[date] }}">
+                              {{ day }}
+                            </div>
+                          </div>
+                        {% else %}
+                          <div class="date-circle"
+                               style="background-color:{{ fraction_colors[fraction[0]] }};
+                                      color:{% if fraction[0] in [0,2,4,6] %}#fff{% else %}#000{% endif %};"
+                               data-tooltip="Fraction {{ 8 if fraction[0] == 0 else fraction[0] }}">
+                            {{ day }}
+                          </div>
+                        {% endif %}
+                      {% elif is_golden %}
+                        <div class="date-cell golden">
+                          <div class="date-circle" data-tooltip="{{ golden_holidays[date] }}">{{ day }}</div>
                         </div>
                       {% else %}
                         {{ day }}
@@ -127,46 +145,64 @@
       </div>
     {% endif %}
 
-    {# — Meses del año seleccionado — #}
-    {% for mi, month in months_with_index %}
+    {% for month_num, month_year, month_matrix in months_with_index %}
       <div class="month">
-        <h2>{{ calendar.month_name[mi+1] }} {{ year }}</h2>
+        <h2>{{ calendar.month_name[month_num] }} {{ month_year }}</h2>
         <table>
           <thead>
-            <tr>
-              {% for d in day_names %}<th>{{ d }}</th>{% endfor %}
-            </tr>
+            <tr>{% for d in day_names %}<th>{{ d }}</th>{% endfor %}</tr>
           </thead>
           <tbody>
-            {% for week in month %}
+            {% for week in month_matrix %}
               <tr>
                 {% for day in week %}
                   <td class="{{ 'empty' if day == 0 else '' }}">
                     {% if day != 0 %}
-                      {% set date = datetime(year, mi+1, day) %}
+                      {% set date = datetime(month_year, month_num, day) %}
                       {% set frac_c = fractional_indices.get(date) %}
                       {% set frac_p = fractional_indices_prev.get(date) %}
                       {% set frac_n = fractional_indices_next.get(date) %}
-                      {% if frac_c %}
-                        {% set fraction = frac_c %}
-                      {% elif frac_p %}
-                        {% set fraction = frac_p %}
-                      {% elif frac_n %}
-                        {% set fraction = frac_n %}
-                      {% else %}
-                        {% set fraction = None %}
-                      {% endif %}
+                      {% set fraction = frac_c or frac_p or frac_n %}
                       {% set is_unf = (date in unfractional_dates)
                                      or (date in unfractional_dates_prev)
                                      or (date in unfractional_dates_next) %}
                       {% set paint_fraction = fraction and (fraction[0] in selected_fractions or 'all' in selected_fractions) %}
+                      {% set is_golden = date in golden_holidays %}
+
                       {% if 'unfractional' in selected_fractions and is_unf %}
-                        <div class="date-circle" style="background-color:#000;color:#fff;">{{ day }}</div>
+                        {% if is_golden %}
+                          <div class="date-cell golden">
+                            <div class="date-circle" style="background-color:#000;color:#fff;"
+                                 data-tooltip="{{ golden_holidays[date] }}">
+                              {{ day }}
+                            </div>
+                          </div>
+                        {% else %}
+                          <div class="date-circle" style="background-color:#000;color:#fff;">
+                            {{ day }}
+                          </div>
+                        {% endif %}
                       {% elif paint_fraction %}
-                        <div class="date-circle"
-                             style="background-color:{{ fraction_colors[fraction[0]] }};
-                                    color:{% if fraction[0] in [0,2,4,6] %}#fff{% else %}#000{% endif %};">
-                          {{ day }}
+                        {% if is_golden %}
+                          <div class="date-cell golden">
+                            <div class="date-circle"
+                                 style="background-color:{{ fraction_colors[fraction[0]] }};
+                                        color:{% if fraction[0] in [0,2,4,6] %}#fff{% else %}#000{% endif %};"
+                                 data-tooltip="Fraction {{ 8 if fraction[0] == 0 else fraction[0] }} - {{ golden_holidays[date] }}">
+                              {{ day }}
+                            </div>
+                          </div>
+                        {% else %}
+                          <div class="date-circle"
+                               style="background-color:{{ fraction_colors[fraction[0]] }};
+                                      color:{% if fraction[0] in [0,2,4,6] %}#fff{% else %}#000{% endif %};"
+                               data-tooltip="Fraction {{ 8 if fraction[0] == 0 else fraction[0] }}">
+                            {{ day }}
+                          </div>
+                        {% endif %}
+                      {% elif is_golden %}
+                        <div class="date-cell golden">
+                          <div class="date-circle" data-tooltip="{{ golden_holidays[date] }}">{{ day }}</div>
                         </div>
                       {% else %}
                         {{ day }}
@@ -181,12 +217,16 @@
       </div>
     {% endfor %}
 
-    {# — Ghost cell en lugar de enero próximo — #}
     <div class="month ghost">
       <h2>&nbsp;</h2>
       <div class="fraction-hunter-footer">
         <p>Looking for some wishful date? Try with:</p>
         <form method="get" action="/hunt_fraction">
+          <input type="hidden" name="apartament" value="{{ apartament }}">
+          <input type="hidden" name="year"      value="{{ year }}">
+          {% for f in selected_fractions %}
+            <input type="hidden" name="fractions" value="{{ f }}">
+          {% endfor %}
           <input type="date" id="hunter_date" name="hunter_date" class="form-button">
           <button type="submit" class="form-button">Fraction Hunter</button>
         </form>

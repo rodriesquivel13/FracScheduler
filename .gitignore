@@ -1,9 +1,15 @@
 # Skyfield ephemeris file
-*.bsp
+**/.bsp/
 
 # Python cache
-__pycache__/
+**/__pycache__/
 *.py[cod]
-
+*.pyc
+utils/__pycache__/
 # Editor config
 .vscode/
+
+# Entorno virtual
+venv/
+
+

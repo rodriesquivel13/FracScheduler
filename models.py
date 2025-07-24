@@ -1,4 +1,6 @@
 apartament_maintenance_path = {
+    104: 0,
+    105: 1,
     204: 0,
     205: 1,
     304: 0,
@@ -37,6 +39,8 @@ apartament_maintenance_path = {
 
 
 apartament_weekday_calendar_starts = {
+    104: 1,
+    105: 1,
     204: 1,
     205: 1,
     304: 2,
@@ -73,4 +77,42 @@ apartament_weekday_calendar_starts = {
     1007: 3,
 }
 
-"""perro perro gato"""
+apartament_type = {
+    104: "snow",
+    105: "snow",
+    204: "regular",
+    205: "regular",
+    304: "regular",
+    305: "regular",
+    306: "regular",
+    307: "regular",
+    404: "regular",
+    405: "regular",
+    406: "regular",
+    407: "regular",
+    504: "regular",
+    505: "regular",
+    506: "regular",
+    507: "regular",
+    604: "regular",
+    605: "regular",
+    606: "regular",
+    607: "regular",
+    704: "regular",
+    705: "regular",
+    706: "regular",
+    707: "regular",
+    804: "regular",
+    805: "regular",
+    806: "regular",
+    807: "regular",
+    904: "regular",
+    905: "regular",
+    906: "regular",
+    907: "regular",
+    1004: "regular",
+    1005: "regular",
+    1006: "regular",
+    1007: "regular",
+}
+
