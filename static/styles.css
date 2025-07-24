@@ -189,7 +189,7 @@ td.unfractional {
 
 /* Borde verde neón de 4px para festivos */
 .date-cell.golden {
-    border: 4px solid #4472C4;  /* verde neón muy vistoso */
+    border: 2px solid #4472C4;  /* verde neón muy vistoso */
 }
 
 
