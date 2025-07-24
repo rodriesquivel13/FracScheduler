@@ -201,3 +201,23 @@ td.unfractional {
     font-size: 16px;
     font-family: 'Libre Baskerville', serif;
 }
+
+.tooltip {
+    position: absolute;
+    background: #333;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    transform: translate(-50%, -120%);
+    z-index: 10;
+}
+
+.date-circle {
+    position: relative;
+}
+
