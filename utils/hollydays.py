@@ -158,13 +158,13 @@ def regular_hollydays_dic(
         new : "New year",
         chris : "Christmas",
         constitution : "Mexican constitution long weekend",
-        benito : "Benito Juárez's birthday long weekend",
+        benito : "Benito Juárez's long weekend",
         revolution : "Mexican Revolution long weekend",
         father: "Father's day",
         thanks : "Thanksgiving",
         valentines: "Valentines' day",
         mother : "Mother's day",
-        work : "Día del trabajo",
+        work : "Day of the work",
         independence : "Mexican independence day"
     }
 
@@ -193,13 +193,13 @@ def snow_hollydays_dic(
         new : "New year",
         chris : "Christmas",
         constitution : "Mexican constitution long weekend",
-        benito : "Benito Juárez's birthday long weekend",
+        benito : "Benito Juárez's long weekend",
         revolution : "Mexican Revolution long weekend",
         father: "Father's day",
         thanks : "Thanksgiving",
         valentines: "Valentines' day",
         mother : "Mother's day",
-        work : "Día del trabajo",
+        work : "Day of the work",
         independence_1 : "Mexican independence day",
         independence_2 : "Mexican independence day",
         independence_3 : "Mexican independence day"
