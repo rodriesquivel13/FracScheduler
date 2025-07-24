@@ -73,7 +73,6 @@
 
   <div class="calendar">
 
-    {# Diciembre del año anterior: solo para “regular” (siempre 1 mes) #}
     {% if apt_type == 'regular' %}
       <div class="month">
         <h2>{{ calendar.month_name[12] }} {{ year - 1 }}</h2>
@@ -96,14 +95,42 @@
                                      or (date in unfractional_dates_prev)
                                      or (date in unfractional_dates_next) %}
                       {% set paint_fraction = fraction and (fraction[0] in selected_fractions or 'all' in selected_fractions) %}
+                      {% set is_golden = date in golden_holidays %}
 
                       {% if 'unfractional' in selected_fractions and is_unf %}
-                        <div class="date-circle" style="background-color:#000;color:#fff;">{{ day }}</div>
+                        {% if is_golden %}
+                          <div class="date-cell golden">
+                            <div class="date-circle" style="background-color:#000;color:#fff;"
+                                 data-tooltip="{{ golden_holidays[date] }}">
+                              {{ day }}
+                            </div>
+                          </div>
+                        {% else %}
+                          <div class="date-circle" style="background-color:#000;color:#fff;">
+                            {{ day }}
+                          </div>
+                        {% endif %}
                       {% elif paint_fraction %}
-                        <div class="date-circle"
-                             style="background-color:{{ fraction_colors[fraction[0]] }};
-                                    color:{% if fraction[0] in [0,2,4,6] %}#fff{% else %}#000{% endif %};">
-                          {{ day }}
+                        {% if is_golden %}
+                          <div class="date-cell golden">
+                            <div class="date-circle"
+                                 style="background-color:{{ fraction_colors[fraction[0]] }};
+                                        color:{% if fraction[0] in [0,2,4,6] %}#fff{% else %}#000{% endif %};"
+                                 data-tooltip="Fraction {{ 8 if fraction[0] == 0 else fraction[0] }} - {{ golden_holidays[date] }}">
+                              {{ day }}
+                            </div>
+                          </div>
+                        {% else %}
+                          <div class="date-circle"
+                               style="background-color:{{ fraction_colors[fraction[0]] }};
+                                      color:{% if fraction[0] in [0,2,4,6] %}#fff{% else %}#000{% endif %};"
+                               data-tooltip="Fraction {{ 8 if fraction[0] == 0 else fraction[0] }}">
+                            {{ day }}
+                          </div>
+                        {% endif %}
+                      {% elif is_golden %}
+                        <div class="date-cell golden">
+                          <div class="date-circle" data-tooltip="{{ golden_holidays[date] }}">{{ day }}</div>
                         </div>
                       {% else %}
                         {{ day }}
@@ -118,7 +145,6 @@
       </div>
     {% endif %}
 
-    {# Meses dinámicos: 12 para regular, 13 para snow #}
     {% for month_num, month_year, month_matrix in months_with_index %}
       <div class="month">
         <h2>{{ calendar.month_name[month_num] }} {{ month_year }}</h2>
@@ -141,14 +167,42 @@
                                      or (date in unfractional_dates_prev)
                                      or (date in unfractional_dates_next) %}
                       {% set paint_fraction = fraction and (fraction[0] in selected_fractions or 'all' in selected_fractions) %}
+                      {% set is_golden = date in golden_holidays %}
 
                       {% if 'unfractional' in selected_fractions and is_unf %}
-                        <div class="date-circle" style="background-color:#000;color:#fff;">{{ day }}</div>
+                        {% if is_golden %}
+                          <div class="date-cell golden">
+                            <div class="date-circle" style="background-color:#000;color:#fff;"
+                                 data-tooltip="{{ golden_holidays[date] }}">
+                              {{ day }}
+                            </div>
+                          </div>
+                        {% else %}
+                          <div class="date-circle" style="background-color:#000;color:#fff;">
+                            {{ day }}
+                          </div>
+                        {% endif %}
                       {% elif paint_fraction %}
-                        <div class="date-circle"
-                             style="background-color:{{ fraction_colors[fraction[0]] }};
-                                    color:{% if fraction[0] in [0,2,4,6] %}#fff{% else %}#000{% endif %};">
-                          {{ day }}
+                        {% if is_golden %}
+                          <div class="date-cell golden">
+                            <div class="date-circle"
+                                 style="background-color:{{ fraction_colors[fraction[0]] }};
+                                        color:{% if fraction[0] in [0,2,4,6] %}#fff{% else %}#000{% endif %};"
+                                 data-tooltip="Fraction {{ 8 if fraction[0] == 0 else fraction[0] }} - {{ golden_holidays[date] }}">
+                              {{ day }}
+                            </div>
+                          </div>
+                        {% else %}
+                          <div class="date-circle"
+                               style="background-color:{{ fraction_colors[fraction[0]] }};
+                                      color:{% if fraction[0] in [0,2,4,6] %}#fff{% else %}#000{% endif %};"
+                               data-tooltip="Fraction {{ 8 if fraction[0] == 0 else fraction[0] }}">
+                            {{ day }}
+                          </div>
+                        {% endif %}
+                      {% elif is_golden %}
+                        <div class="date-cell golden">
+                          <div class="date-circle" data-tooltip="{{ golden_holidays[date] }}">{{ day }}</div>
                         </div>
                       {% else %}
                         {{ day }}
@@ -163,7 +217,6 @@
       </div>
     {% endfor %}
 
-    {# Ghost cell + Fraction Hunter footer #}
     <div class="month ghost">
       <h2>&nbsp;</h2>
       <div class="fraction-hunter-footer">

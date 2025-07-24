@@ -73,7 +73,7 @@ def benito_juarez_birthday(current_year):
 def mexican_revolution_day(current_year):
     """
     Since 2006 mexican government decreed day of the revolution will celebrated on third monday of november in each year.
-     So, this function calculates when is that particular monday.
+    So, this function calculates when is that particular monday.
     """
     count = 0
     for day in range(1, 31):  # november has 30 days
@@ -133,6 +133,78 @@ def independence_day(current_year):
     """
     date = datetime(current_year,9,16)
     return date
+
+
+# ========= Hollydays Dics ====
+def regular_hollydays_dic(
+    current_year
+):
+    semana_santa = sabado_santo(current_year)
+    easter = easter_saturday(current_year)
+    new = new_year(current_year)
+    chris = christmas(current_year)
+    constitution = constitution_day(current_year)
+    benito = benito_juarez_birthday(current_year)
+    revolution = mexican_revolution_day(current_year)
+    father = father_day(current_year)
+    thanks = thanksgiving(current_year)
+    valentines = valentines_day(current_year)
+    mother = mothers_day(current_year)
+    work = work_day(current_year)
+    independence = independence_day(current_year)
+    return {
+        semana_santa : "Semana Santa's weekend",
+        easter : "Easter's weekend",
+        new : "New year",
+        chris : "Christmas",
+        constitution : "Mexican constitution long weekend",
+        benito : "Benito Juárez's birthday long weekend",
+        revolution : "Mexican Revolution long weekend",
+        father: "Father's day",
+        thanks : "Thanksgiving",
+        valentines: "Valentines' day",
+        mother : "Mother's day",
+        work : "Día del trabajo",
+        independence : "Mexican independence day"
+    }
+
+def snow_hollydays_dic(
+    current_year
+):
+    semana_santa = sabado_santo(current_year + 1)
+    easter = easter_saturday(current_year + 1)
+    new = new_year(current_year + 1)
+    chris = christmas(current_year)
+    constitution = constitution_day(current_year + 1)
+    benito = benito_juarez_birthday(current_year + 1)
+    revolution = mexican_revolution_day(current_year)
+    father = father_day(current_year + 1)
+    thanks = thanksgiving(current_year)
+    valentines = valentines_day(current_year + 1)
+    mother = mothers_day(current_year + 1)
+    work = work_day(current_year + 1)
+    independence_1 = independence_day(current_year)
+    independence_2 = independence_day(current_year + 1)
+    independence_3 = independence_day(current_year - 1)
+
+    return {
+        semana_santa : "Semana Santa's weekend",
+        easter : "Easter's weekend",
+        new : "New year",
+        chris : "Christmas",
+        constitution : "Mexican constitution long weekend",
+        benito : "Benito Juárez's birthday long weekend",
+        revolution : "Mexican Revolution long weekend",
+        father: "Father's day",
+        thanks : "Thanksgiving",
+        valentines: "Valentines' day",
+        mother : "Mother's day",
+        work : "Día del trabajo",
+        independence_1 : "Mexican independence day",
+        independence_2 : "Mexican independence day",
+        independence_3 : "Mexican independence day"
+
+    }
 
 # ======== Test Block ========
 

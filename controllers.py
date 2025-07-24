@@ -10,7 +10,6 @@ from models import (
     apartament_weekday_calendar_starts,
     apartament_type,
 )
-
 from utils import (
     regular_fractional_index_maker,
     snow_fractional_index_maker,
@@ -19,16 +18,12 @@ from utils import (
     regular_fraction_hunter,
     snow_fraction_hunter,
 )
+from utils.hollydays import regular_hollydays_dic, snow_hollydays_dic
 
 controllers = Blueprint('controllers', __name__)
 
 
 def build_months(year, apt_type):
-    """
-    Devuelve una lista de tuplas (mes, año, matriz) según el tipo de calendario:
-    - regular: enero–diciembre del mismo año
-    - snow: septiembre (year) → septiembre (year+1)
-    """
     display_cal = calendar.Calendar(firstweekday=0)
 
     if apt_type == "regular":
@@ -49,10 +44,6 @@ def build_months(year, apt_type):
 
 
 def choose_utils(apartament):
-    """
-    Según apartament_type, devuelve el trio de funciones adecuadas:
-    (index_maker, unfractional_list, fraction_hunter)
-    """
     typ = apartament_type.get(apartament, "regular")
     if typ == "snow":
         return (
@@ -69,34 +60,28 @@ def choose_utils(apartament):
 
 @controllers.route('/')
 def index():
-    year                    = request.args.get('year', 2026, type=int)
-    apartament              = request.args.get('apartament', 204, type=int)
-    maintenance_path        = apartament_maintenance_path.get(apartament, 1)
+    year = request.args.get('year', 2026, type=int)
+    apartament = request.args.get('apartament', 204, type=int)
+    maintenance_path = apartament_maintenance_path.get(apartament, 1)
     weekday_calendar_starts = apartament_weekday_calendar_starts.get(apartament, 1)
 
-    # Elegimos la lógica (regular vs snow)
     idx_maker, unfract_list, _ = choose_utils(apartament)
 
-    # Calculamos índices fraccionales actual, previo y siguiente
-    fractional_indices      = idx_maker(year, weekday_calendar_starts, maintenance_path)
+    fractional_indices = idx_maker(year, weekday_calendar_starts, maintenance_path)
     fractional_indices_prev = idx_maker(year - 1, weekday_calendar_starts, maintenance_path)
     fractional_indices_next = idx_maker(year + 1, weekday_calendar_starts, maintenance_path)
 
-    # Calculamos fechas sin fracción
-    unf_dates      = unfract_list(year, weekday_calendar_starts, maintenance_path)
+    unf_dates = unfract_list(year, weekday_calendar_starts, maintenance_path)
     unf_dates_prev = unfract_list(year - 1, weekday_calendar_starts, maintenance_path)
     unf_dates_next = unfract_list(year + 1, weekday_calendar_starts, maintenance_path)
 
-    # Tipo y rango de meses dinámico
-    apt_type          = apartament_type.get(apartament, "regular")
+    apt_type = apartament_type.get(apartament, "regular")
     months_with_index = build_months(year, apt_type)
 
-    # Diciembre previo (solo para regular)
-    display_cal       = calendar.Calendar(firstweekday=0)
+    display_cal = calendar.Calendar(firstweekday=0)
     previous_december = display_cal.monthdayscalendar(year - 1, 12)
-    day_names         = [calendar.day_abbr[i] for i in range(7)]
+    day_names = [calendar.day_abbr[i] for i in range(7)]
 
-    # Fracciones seleccionadas
     selected = request.args.getlist('fractions', type=str)
     if 'all' in selected:
         selected = list(range(8)) + ['unfractional', 'all']
@@ -104,6 +89,12 @@ def index():
         selected = [int(f) if f.isdigit() else f for f in selected]
     if 'unfractional' not in selected:
         unf_dates = unf_dates_prev = unf_dates_next = []
+
+    # Aquí enviamos el diccionario completo, no solo las llaves
+    if apt_type == "snow":
+        golden_holidays = snow_hollydays_dic(year)
+    else:
+        golden_holidays = regular_hollydays_dic(year)
 
     return render_template(
         'calendar.html',
@@ -126,16 +117,17 @@ def index():
         unfractional_dates=unf_dates,
         unfractional_dates_prev=unf_dates_prev,
         unfractional_dates_next=unf_dates_next,
-        selected_fractions=selected
+        selected_fractions=selected,
+        golden_holidays=golden_holidays,  # PASAMOS EL DICCIONARIO COMPLETO
     )
 
 
 @controllers.route('/generate_pdf')
 def generate_pdf():
-    start_year              = request.args.get('start_year', type=int)
-    end_year                = request.args.get('end_year',   type=int)
-    apartament              = request.args.get('apartament', 204, type=int)
-    maintenance_path        = apartament_maintenance_path.get(apartament, 1)
+    start_year = request.args.get('start_year', type=int)
+    end_year = request.args.get('end_year', type=int)
+    apartament = request.args.get('apartament', 204, type=int)
+    maintenance_path = apartament_maintenance_path.get(apartament, 1)
     weekday_calendar_starts = apartament_weekday_calendar_starts.get(apartament, 1)
 
     idx_maker, _, _ = choose_utils(apartament)
@@ -173,9 +165,9 @@ def generate_pdf():
 
 @controllers.route('/hunt_fraction')
 def hunt_fraction():
-    date_str                = request.args.get('hunter_date')
-    apartament              = request.args.get('apartament', 204, type=int)
-    maintenance_path        = apartament_maintenance_path.get(apartament, 1)
+    date_str = request.args.get('hunter_date')
+    apartament = request.args.get('apartament', 204, type=int)
+    maintenance_path = apartament_maintenance_path.get(apartament, 1)
     weekday_calendar_starts = apartament_weekday_calendar_starts.get(apartament, 1)
 
     if not date_str:
@@ -196,20 +188,26 @@ def hunt_fraction():
         return result, 404
 
     idx_maker, unfract_list, _ = choose_utils(apartament)
-    frac_idx      = idx_maker(wish.year, weekday_calendar_starts, maintenance_path)
+    frac_idx = idx_maker(wish.year, weekday_calendar_starts, maintenance_path)
     frac_idx_prev = idx_maker(wish.year - 1, weekday_calendar_starts, maintenance_path)
     frac_idx_next = idx_maker(wish.year + 1, weekday_calendar_starts, maintenance_path)
 
-    unf_dates      = unfract_list(wish.year, weekday_calendar_starts, maintenance_path)
+    unf_dates = unfract_list(wish.year, weekday_calendar_starts, maintenance_path)
     unf_dates_prev = unfract_list(wish.year - 1, weekday_calendar_starts, maintenance_path)
     unf_dates_next = unfract_list(wish.year + 1, weekday_calendar_starts, maintenance_path)
 
-    apt_type          = apartament_type.get(apartament, "regular")
+    apt_type = apartament_type.get(apartament, "regular")
     months_with_index = build_months(wish.year, apt_type)
 
-    display_cal       = calendar.Calendar(firstweekday=0)
+    display_cal = calendar.Calendar(firstweekday=0)
     previous_december = display_cal.monthdayscalendar(wish.year - 1, 12)
-    day_names         = [calendar.day_abbr[i] for i in range(7)]
+    day_names = [calendar.day_abbr[i] for i in range(7)]
+
+    # Pasar diccionario completo con los nombres de festivos
+    if apt_type == "snow":
+        golden_holidays = snow_hollydays_dic(wish.year)
+    else:
+        golden_holidays = regular_hollydays_dic(wish.year)
 
     return render_template(
         'calendar.html',
@@ -232,5 +230,6 @@ def hunt_fraction():
         unfractional_dates=unf_dates,
         unfractional_dates_prev=unf_dates_prev,
         unfractional_dates_next=unf_dates_next,
-        selected_fractions=[result[0]]
+        selected_fractions=[result[0]],
+        golden_holidays=golden_holidays,
     )
