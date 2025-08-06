@@ -76,7 +76,7 @@ def hunt_fraction():
     )
 
     return render_template(
-        'calendar.html',
+        'calendar.html.j2',
         year=cycle_year,
         apt_type=apt_type,
         apartament=apartment,

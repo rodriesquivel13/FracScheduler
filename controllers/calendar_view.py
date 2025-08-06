@@ -102,7 +102,7 @@ def index():
     )
 
     return render_template(
-        'calendar.html',
+        'calendar.html.j2',
         year=year,
         apt_type=apt_type,
         apartament=apartment,
