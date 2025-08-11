@@ -16,7 +16,6 @@ def holly_weeks(
     Some weeks have special hollydays which no one want to miss them. 
     Those hollydays could be deterministic or probabilistic.
     """
-
     def deterministic_holly_weeks(
         current_year,
         weekday_calendar_starts
@@ -123,8 +122,6 @@ def maintenance_weeks_list(
         dic = {k: v for k, v in regular.items() if v[0] < max_regular_len}
 
         return {k:[(v[0] + (current_year % fractions_quantity)) % (max_regular_len // reserved_weeks)] for (k,v) in dic.items()}
-        
-        
 
     maintenance_deserved_weeks = maintenance_weeks_paths(current_year, weekday_calendar_starts,reserved_weeks)
     lenght = len(maintenance_deserved_weeks.values()) // 7 // reserved_weeks
@@ -180,9 +177,6 @@ def fractional_day_weeker(
             pass
     
     return week_fractional_indexes
-    
-
-        
 
 def fractional_index_maker(
     current_year,
@@ -203,7 +197,6 @@ def fractional_index_maker(
         fraction_index_list.append(fraction_index)
 
     return dict(zip(fractional_calendar_week_indexed.keys(),fraction_index_list))
-    
 
 def fraction_hunter(
     wishful_year, wishful_month, 
