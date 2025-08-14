@@ -7,3 +7,6 @@ venv/
 
 # Editor config
 .vscode/
+
+# Jupyter notebook checkpoints
+analysis/.ipynb_checkpoints/
