@@ -1,15 +1,12 @@
-# Skyfield ephemeris file
-**/.bsp/
+# Entorno virtual
+venv/
 
 # Python cache
 **/__pycache__/
 *.py[cod]
-*.pyc
-utils/__pycache__/
+
 # Editor config
 .vscode/
 
-# Entorno virtual
-venv/
-
-
+# Jupyter notebook checkpoints
+analysis/.ipynb_checkpoints/
